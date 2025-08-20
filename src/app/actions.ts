@@ -19,12 +19,14 @@ const formSchema = z.object({
 });
 
 export async function getVehicleInfo(regNr: string) {
+  console.log(`[SCRAPE] Starting vehicle info fetch for: ${regNr}`);
   try {
     const initialResponse = await fetch("https://motorregister.skat.dk/dmr-kerne/koeretoejdetaljer/visKoeretoej", {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36'
       }
     });
+    console.log('[SCRAPE] Initial page fetched.');
 
     const initialHtml = await initialResponse.text();
     const $initial = cheerio.load(initialHtml);
@@ -32,8 +34,10 @@ export async function getVehicleInfo(regNr: string) {
     const formAction = $initial('form[id="searchForm"]').attr('action');
 
     if (!token || !formAction) {
+      console.error("[SCRAPE ERROR] Could not find token or form action on initial page.");
       throw new Error("Could not find token or form action on SKAT page.");
     }
+    console.log(`[SCRAPE] Found token: ${token ? 'Yes' : 'No'}, Found form action: ${formAction ? 'Yes' : 'No'}`);
     
     const searchUrl = 'https://motorregister.skat.dk' + formAction;
     const searchBody = new URLSearchParams({
@@ -42,7 +46,6 @@ export async function getVehicleInfo(regNr: string) {
       soegekriterie: 'REGISTRERINGSNUMMER',
     });
     
-    // Add the submit button value to the payload
     const submitButton = $initial('button[type="submit"]');
     if (submitButton.length > 0) {
         const buttonName = submitButton.attr('name');
@@ -50,11 +53,13 @@ export async function getVehicleInfo(regNr: string) {
         if (buttonName && buttonValue) {
             searchBody.set(buttonName, buttonValue);
         } else {
-             searchBody.set(formAction, "Søg"); // fallback from python script
+             searchBody.set(formAction, "Søg");
         }
     } else {
         searchBody.set(formAction, "Søg");
     }
+
+    console.log('[SCRAPE] Sending search request with body:', Object.fromEntries(searchBody.entries()));
 
     const searchResponse = await fetch(searchUrl, {
       method: 'POST',
@@ -69,15 +74,19 @@ export async function getVehicleInfo(regNr: string) {
     const searchHtml = await searchResponse.text();
 
     if (searchHtml.includes("Ingen køretøjer fundet.")) {
+      console.log("[SCRAPE] No vehicle found for the given registration number.");
       return { error: "No vehicle found with that registration number." };
     }
+    console.log('[SCRAPE] Vehicle details page received.');
   
     const dom = new JSDOM(searchHtml);
     const document = dom.window.document;
 
     const getValueByLabel = (label: string) => {
       const element = document.evaluate(`//div[contains(@class, 'col-md-3') and normalize-space(text())='${label}']/following-sibling::div[1]`, document, null, dom.window.XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-      return element?.textContent?.trim() || null;
+      const value = element?.textContent?.trim() || null;
+      console.log(`[SCRAPE] Extracting '${label}': ${value}`);
+      return value;
     }
     
     const makeModelVariant = getValueByLabel("Mærke, model, variant");
@@ -90,6 +99,8 @@ export async function getVehicleInfo(regNr: string) {
     const firstRegDateRaw = getValueByLabel("1. registreringsdato");
     const year = firstRegDateRaw ? new Date(firstRegDateRaw.split('. ')[1]).getFullYear().toString() : null;
 
+    console.log(`[SCRAPE] Final extracted data - Make: ${make}, Model: ${model}, Year: ${year}`);
+
     return {
       success: true,
       data: {
@@ -99,7 +110,7 @@ export async function getVehicleInfo(regNr: string) {
       }
     };
   } catch (e: any) {
-    console.error("Scraping error:", e);
+    console.error("[SCRAPE] Top-level error:", e.message);
     return { error: "Failed to fetch vehicle data. The service might be unavailable." };
   }
 }
@@ -117,9 +128,6 @@ export async function submitOffer(formData: FormData) {
 
   const { data } = validatedFields;
   const files = formData.getAll("photos");
-
-  // In a real application, you would integrate an email service like Resend, SendGrid, or Nodemailer here.
-  // You would also upload the files to a storage service like Firebase Storage or AWS S3 and include the links in the email.
   
   console.log("--- New Car Offer Received ---");
   console.log("Offer Details:", data);
@@ -134,7 +142,6 @@ export async function submitOffer(formData: FormData) {
   console.log("Photos:", photoDetails || "No photos uploaded");
   console.log("----------------------------");
 
-  // Simulate network delay for a more realistic UI experience
   await new Promise((resolve) => setTimeout(resolve, 2000));
 
   return { success: "Offer submitted successfully! We will get back to you shortly." };
