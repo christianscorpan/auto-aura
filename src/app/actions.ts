@@ -25,11 +25,15 @@ export async function getVehicleInfo(regNr: string) {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36'
       }
     });
+    console.log(`[SCRAPE] Initial page fetch status: ${initialResponse.status}`);
 
     const initialHtml = await initialResponse.text();
     const $initial = cheerio.load(initialHtml);
     const token = $initial('input[name="dmrFormToken"]').val();
     const formAction = $initial('form[id="searchForm"]').attr('action');
+
+    console.log(`[SCRAPE] Extracted token: ${token}`);
+    console.log(`[SCRAPE] Extracted form action: ${formAction}`);
 
     if (!token || !formAction) {
       console.error("[SCRAPE ERROR] Could not find token or form action on initial page.");
@@ -44,6 +48,7 @@ export async function getVehicleInfo(regNr: string) {
       "button.search": "Søg"
     });
 
+    console.log(`[SCRAPE] Posting to URL: ${searchUrl}`);
     const searchResponse = await fetch(searchUrl, {
       method: 'POST',
       body: searchBody,
@@ -54,6 +59,7 @@ export async function getVehicleInfo(regNr: string) {
       }
     });
 
+    console.log(`[SCRAPE] Search request status: ${searchResponse.status}`);
     const searchHtml = await searchResponse.text();
     
     if (searchHtml.includes("Ingen køretøjer fundet.")) {
@@ -61,6 +67,7 @@ export async function getVehicleInfo(regNr: string) {
       return { error: "No vehicle found with that registration number." };
     }
     
+    console.log('[SCRAPE] Vehicle found page content length:', searchHtml.length);
     const $ = cheerio.load(searchHtml);
 
     const getValueByLabel = (label: string) => {
@@ -74,11 +81,13 @@ export async function getVehicleInfo(regNr: string) {
     let make = null;
     let model = null;
     if (makeModelVariant) {
-        [make, model] = makeModelVariant.split(',').map(s => s.trim());
+        const parts = makeModelVariant.split(',').map(s => s.trim());
+        make = parts[0] || null;
+        model = parts[1] || null;
     }
     
     const firstRegDateRaw = getValueByLabel("1. registreringsdato");
-    const year = firstRegDateRaw ? new Date(firstRegDateRaw).getFullYear().toString() : null;
+    const year = firstRegDateRaw ? new Date(firstRegDateRaw.split(' ')[0]).getFullYear().toString() : null;
 
     console.log(`[SCRAPE] Final extracted data - Make: ${make}, Model: ${model}, Year: ${year}`);
 
