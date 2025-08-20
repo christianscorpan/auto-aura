@@ -116,20 +116,30 @@ export function CarSaleForm() {
     }
 
     setIsFetching(true);
-    const result = await getVehicleInfo(regNr);
-    setIsFetching(false);
-
-    if (result.error) {
-      toast({ variant: "destructive", title: "Error", description: result.error });
-    } else if (result.success && result.data) {
-      const { make, model, year } = result.data;
-      if (make) form.setValue("make", make);
-      if (model) form.setValue("model", model);
-      if (year) form.setValue("year", year);
+    try {
+      const result = await getVehicleInfo(regNr);
       
-      toast({ title: "Vehicle Found!", description: "We've pre-filled some details for you." });
-      
-      setStep(s => s + 1);
+      if (result.error) {
+        toast({ variant: "destructive", title: "Error", description: result.error });
+      } else if (result.success && result.data) {
+        const { make, model, year } = result.data;
+        if (make) form.setValue("make", make, { shouldValidate: true });
+        if (model) form.setValue("model", model, { shouldValidate: true });
+        if (year) form.setValue("year", year, { shouldValidate: true });
+        
+        toast({ title: "Vehicle Found!", description: "We've pre-filled some details for you." });
+        
+        setStep(s => s + 1);
+      }
+    } catch (error) {
+      console.error("[FORM ERROR] Failed to call getVehicleInfo:", error);
+      toast({
+        variant: "destructive",
+        title: "Client Error",
+        description: "Could not contact the vehicle service. Please check the console for details.",
+      });
+    } finally {
+      setIsFetching(false);
     }
   };
 
