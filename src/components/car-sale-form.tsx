@@ -136,7 +136,6 @@ export function CarSaleForm() {
         form.setValue("model", model, { shouldValidate: true });
         form.setValue("year", year, { shouldValidate: true });
         
-        // We now directly proceed to the next step, trusting the API's successful response.
         setStep(s => s + 1);
         toast({ title: "Vehicle Found!", description: "We've pre-filled some details for you." });
       }
@@ -312,6 +311,9 @@ export function CarSaleForm() {
           <CardFooter className="flex justify-between pt-6">
             {step > 1 && step < 6 && ( <Button type="button" variant="outline" onClick={handleBack} disabled={isPending}> <ArrowLeft className="mr-2 h-4 w-4" /> Back </Button> )}
             <div className={step === 1 ? 'w-full flex justify-end' : ''}>
+                 {step < 2 && ( <Button type="button" onClick={handleNext} className="invisible" > 
+                    Next
+                 </Button> )}
                  {step > 1 && step < 5 && ( <Button type="button" onClick={handleNext}> 
                     Next
                  </Button> )}
