@@ -108,6 +108,7 @@ export function CarSaleForm() {
   };
 
   const handleFetchVehicleInfo = async () => {
+    console.log("[FORM] 'Find Vehicle' button clicked.");
     const regNr = form.getValues("regNr");
     if (!regNr || regNr.length < 2) {
       form.setError("regNr", { type: "manual", message: "Danish reg. nr. is required." });
