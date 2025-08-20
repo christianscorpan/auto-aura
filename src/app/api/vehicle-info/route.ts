@@ -83,8 +83,16 @@ async function getVehicleInfo(regNr: string) {
         year = yearPart;
     }
 
+    // Fallback if the combined field fails
+    if (!make) make = getValueByLabel("Mærke");
+    if (!model) model = getValueByLabel("Model");
+    if (!year) year = getValueByLabel("1. registreringsdato")?.split('-')[2] || null;
 
     console.log(`[API_ROUTE] Final extracted data - Make: ${make}, Model: ${model}, Year: ${year}`);
+
+    if (!make || !model || !year) {
+      return { error: "The vehicle registry didn't provide all required details. Please enter them manually." };
+    }
 
     return {
       success: true,
@@ -108,7 +116,7 @@ export async function POST(request: Request) {
     }
     const result = await getVehicleInfo(regNr);
     if (result.error) {
-        return NextResponse.json(result, { status: 500 });
+        return NextResponse.json(result, { status: 400 }); // Use 400 for client-side errors like not found or missing details
     }
     return NextResponse.json(result);
   } catch (error) {

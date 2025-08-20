@@ -131,27 +131,20 @@ export function CarSaleForm() {
       
       if (result.success && result.data) {
         const { make, model, year } = result.data;
-        if (make) form.setValue("make", make, { shouldValidate: true });
-        if (model) form.setValue("model", model, { shouldValidate: true });
-        if (year) form.setValue("year", year, { shouldValidate: true });
         
+        form.setValue("make", make, { shouldValidate: true });
+        form.setValue("model", model, { shouldValidate: true });
+        form.setValue("year", year, { shouldValidate: true });
+        
+        // We now directly proceed to the next step, trusting the API's successful response.
+        setStep(s => s + 1);
         toast({ title: "Vehicle Found!", description: "We've pre-filled some details for you." });
-        
-        // Trigger validation for the newly set fields
-        const isValid = await form.trigger(["make", "model", "year"]);
-        if (isValid) {
-          setStep(s => s + 1);
-        } else {
-          // If validation fails, it might be because the scraper returned null.
-          // The form errors will be displayed automatically.
-          toast({ variant: "destructive", title: "Missing Details", description: "The vehicle registry didn't provide all required details. Please check the fetched information." });
-        }
       }
     } catch (error: any) {
       console.error("[FORM ERROR] Failed to call vehicle API:", error);
       toast({
         variant: "destructive",
-        title: "Client Error",
+        title: "Error",
         description: error.message || "Could not contact the vehicle service. Please try again.",
       });
     } finally {
