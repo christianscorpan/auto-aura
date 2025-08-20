@@ -3,7 +3,6 @@
 
 import { z } from "zod";
 import * as cheerio from 'cheerio';
-import { JSDOM } from 'jsdom';
 
 const formSchema = z.object({
   regNr: z.string().min(2, "Registration number is required."),
@@ -26,7 +25,6 @@ export async function getVehicleInfo(regNr: string) {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36'
       }
     });
-    console.log('[SCRAPE] Initial page fetched.');
 
     const initialHtml = await initialResponse.text();
     const $initial = cheerio.load(initialHtml);
@@ -37,29 +35,14 @@ export async function getVehicleInfo(regNr: string) {
       console.error("[SCRAPE ERROR] Could not find token or form action on initial page.");
       throw new Error("Could not find token or form action on SKAT page.");
     }
-    console.log(`[SCRAPE] Found token: ${token ? 'Yes' : 'No'}, Found form action: ${formAction ? 'Yes' : 'No'}`);
     
     const searchUrl = 'https://motorregister.skat.dk' + formAction;
     const searchBody = new URLSearchParams({
       dmrFormToken: token,
       soegeord: regNr,
       soegekriterie: 'REGISTRERINGSNUMMER',
+      "button.search": "Søg"
     });
-    
-    const submitButton = $initial('button[type="submit"]');
-    if (submitButton.length > 0) {
-        const buttonName = submitButton.attr('name');
-        const buttonValue = submitButton.attr('value');
-        if (buttonName && buttonValue) {
-            searchBody.set(buttonName, buttonValue);
-        } else {
-             searchBody.set(formAction, "Søg");
-        }
-    } else {
-        searchBody.set(formAction, "Søg");
-    }
-
-    console.log('[SCRAPE] Sending search request with body:', Object.fromEntries(searchBody.entries()));
 
     const searchResponse = await fetch(searchUrl, {
       method: 'POST',
@@ -72,23 +55,21 @@ export async function getVehicleInfo(regNr: string) {
     });
 
     const searchHtml = await searchResponse.text();
-
+    
     if (searchHtml.includes("Ingen køretøjer fundet.")) {
       console.log("[SCRAPE] No vehicle found for the given registration number.");
       return { error: "No vehicle found with that registration number." };
     }
-    console.log('[SCRAPE] Vehicle details page received.');
-  
-    const dom = new JSDOM(searchHtml);
-    const document = dom.window.document;
+    
+    const $ = cheerio.load(searchHtml);
 
     const getValueByLabel = (label: string) => {
-      const element = document.evaluate(`//div[contains(@class, 'col-md-3') and normalize-space(text())='${label}']/following-sibling::div[1]`, document, null, dom.window.XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-      const value = element?.textContent?.trim() || null;
-      console.log(`[SCRAPE] Extracting '${label}': ${value}`);
-      return value;
+        const elem = $(`div.label:contains('${label}')`);
+        const value = elem.next('div.control').find('span.value, div.value').text().trim();
+        console.log(`[SCRAPE] Extracted '${label}': ${value}`);
+        return value || null;
     }
-    
+
     const makeModelVariant = getValueByLabel("Mærke, model, variant");
     let make = null;
     let model = null;
@@ -97,7 +78,7 @@ export async function getVehicleInfo(regNr: string) {
     }
     
     const firstRegDateRaw = getValueByLabel("1. registreringsdato");
-    const year = firstRegDateRaw ? new Date(firstRegDateRaw.split('. ')[1]).getFullYear().toString() : null;
+    const year = firstRegDateRaw ? new Date(firstRegDateRaw).getFullYear().toString() : null;
 
     console.log(`[SCRAPE] Final extracted data - Make: ${make}, Model: ${model}, Year: ${year}`);
 
@@ -110,7 +91,7 @@ export async function getVehicleInfo(regNr: string) {
       }
     };
   } catch (e: any) {
-    console.error("[SCRAPE] Top-level error:", e.message);
+    console.error("[SCRAPE] Top-level error:", e.message, e.stack);
     return { error: "Failed to fetch vehicle data. The service might be unavailable." };
   }
 }
