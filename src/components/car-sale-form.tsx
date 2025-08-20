@@ -45,7 +45,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { submitOffer, getVehicleInfo } from "@/app/actions";
+import { submitOffer } from "@/app/actions";
 import Image from "next/image";
 
 const formSchema = z.object({
@@ -117,11 +117,19 @@ export function CarSaleForm() {
 
     setIsFetching(true);
     try {
-      const result = await getVehicleInfo(regNr);
+      const response = await fetch('/api/vehicle-info', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ regNr }),
+      });
       
-      if (result.error) {
-        toast({ variant: "destructive", title: "Error", description: result.error });
-      } else if (result.success && result.data) {
+      const result = await response.json();
+
+      if (!response.ok || result.error) {
+        throw new Error(result.error || "Failed to fetch vehicle data.");
+      }
+      
+      if (result.success && result.data) {
         const { make, model, year } = result.data;
         if (make) form.setValue("make", make, { shouldValidate: true });
         if (model) form.setValue("model", model, { shouldValidate: true });
@@ -129,14 +137,22 @@ export function CarSaleForm() {
         
         toast({ title: "Vehicle Found!", description: "We've pre-filled some details for you." });
         
-        setStep(s => s + 1);
+        // Trigger validation for the newly set fields
+        const isValid = await form.trigger(["make", "model", "year"]);
+        if (isValid) {
+          setStep(s => s + 1);
+        } else {
+          // If validation fails, it might be because the scraper returned null.
+          // The form errors will be displayed automatically.
+          toast({ variant: "destructive", title: "Missing Details", description: "The vehicle registry didn't provide all required details. Please check the fetched information." });
+        }
       }
-    } catch (error) {
-      console.error("[FORM ERROR] Failed to call getVehicleInfo:", error);
+    } catch (error: any) {
+      console.error("[FORM ERROR] Failed to call vehicle API:", error);
       toast({
         variant: "destructive",
         title: "Client Error",
-        description: "Could not contact the vehicle service. Please check the console for details.",
+        description: error.message || "Could not contact the vehicle service. Please try again.",
       });
     } finally {
       setIsFetching(false);
@@ -233,21 +249,21 @@ export function CarSaleForm() {
 
             {step === 2 && (
               <div className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm p-4 bg-muted/50 rounded-lg">
                     <div>
-                        <FormLabel>Make</FormLabel>
-                        <p className="font-medium">{form.getValues("make")}</p>
+                        <FormLabel className="text-muted-foreground">Make</FormLabel>
+                        <p className="font-semibold text-lg">{form.getValues("make") || 'N/A'}</p>
                     </div>
                     <div>
-                        <FormLabel>Model</FormLabel>
-                        <p className="font-medium">{form.getValues("model")}</p>
+                        <FormLabel className="text-muted-foreground">Model</FormLabel>
+                        <p className="font-semibold text-lg">{form.getValues("model") || 'N/A'}</p>
                     </div>
                      <div>
-                        <FormLabel>Year</FormLabel>
-                        <p className="font-medium">{form.getValues("year")}</p>
+                        <FormLabel className="text-muted-foreground">Year</FormLabel>
+                        <p className="font-semibold text-lg">{form.getValues("year") || 'N/A'}</p>
                     </div>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4">
                 <FormField name="mileage" control={form.control} render={({ field }) => ( <FormItem><FormLabel>Mileage (km)</FormLabel><FormControl><Input type="number" placeholder="e.g. 50000" {...field} /></FormControl><FormMessage /></FormItem> )} />
                 <FormField name="condition" control={form.control} render={({ field }) => ( <FormItem><FormLabel>Condition</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select condition" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Excellent">Excellent</SelectItem><SelectItem value="Good">Good</SelectItem><SelectItem value="Fair">Fair</SelectItem><SelectItem value="Poor">Poor</SelectItem></SelectContent></Select><FormMessage /></FormItem> )} />
                 <FormField name="price" control={form.control} render={({ field }) => ( <FormItem><FormLabel>Asking Price (DKK)</FormLabel><FormControl><Input type="number" placeholder="e.g. 250000" {...field} /></FormControl><FormMessage /></FormItem> )} />
@@ -303,7 +319,7 @@ export function CarSaleForm() {
           <CardFooter className="flex justify-between pt-6">
             {step > 1 && step < 6 && ( <Button type="button" variant="outline" onClick={handleBack} disabled={isPending}> <ArrowLeft className="mr-2 h-4 w-4" /> Back </Button> )}
             <div className={step === 1 ? 'w-full flex justify-end' : ''}>
-                 {step < 5 && step !== 1 && ( <Button type="button" onClick={handleNext}> 
+                 {step > 1 && step < 5 && ( <Button type="button" onClick={handleNext}> 
                     Next
                  </Button> )}
                 {step === 5 && ( <Button type="submit" disabled={isPending} className="w-full"> {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} Submit Offer </Button> )}
