@@ -87,7 +87,13 @@ export async function getVehicleInfo(regNr: string) {
     }
     
     const firstRegDateRaw = getValueByLabel("1. registreringsdato");
-    const year = firstRegDateRaw ? new Date(firstRegDateRaw.split(' ')[0]).getFullYear().toString() : null;
+    let year = null;
+    if (firstRegDateRaw) {
+        const datePart = firstRegDateRaw.split(' ')[0]; // "DD-MM-YYYY"
+        const yearPart = datePart.split('-')[2];
+        year = yearPart;
+    }
+
 
     console.log(`[SCRAPE] Final extracted data - Make: ${make}, Model: ${model}, Year: ${year}`);
 
