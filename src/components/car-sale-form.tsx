@@ -110,7 +110,7 @@ export function CarSaleForm() {
   const handleFetchVehicleInfo = async () => {
     const regNr = form.getValues("regNr");
     const isValid = await form.trigger(["regNr"]);
-    if (!isValid) return;
+    if (!isValid) return false;
 
     setIsFetching(true);
     const result = await getVehicleInfo(regNr);
@@ -118,19 +118,24 @@ export function CarSaleForm() {
 
     if (result.error) {
       toast({ variant: "destructive", title: "Error", description: result.error });
+      return false;
     } else if (result.success && result.data) {
       const { make, model, year } = result.data;
       if (make) form.setValue("make", make, { shouldValidate: true });
       if (model) form.setValue("model", model, { shouldValidate: true });
       if (year) form.setValue("year", year, { shouldValidate: true });
-      toast({ title: "Vehicle Found!", description: "We've pre-filled the make, model, and year for you." });
-      setStep(2);
+      toast({ title: "Vehicle Found!", description: "We've pre-filled some details for you." });
+      return true;
     }
+    return false;
   };
 
   const handleNext = async () => {
     if (step === 1) {
-        await handleFetchVehicleInfo();
+        const success = await handleFetchVehicleInfo();
+        if (success) {
+            setStep(s => s + 1);
+        }
         return;
     }
 
@@ -210,7 +215,7 @@ export function CarSaleForm() {
                       <FormControl>
                         <Input placeholder="e.g. AB12345" {...field} />
                       </FormControl>
-                      <Button type="button" onClick={handleFetchVehicleInfo} disabled={isFetching}>
+                      <Button type="button" onClick={handleNext} disabled={isFetching}>
                         {isFetching ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Search className="mr-2 h-4 w-4" />}
                         Find Vehicle
                       </Button>
@@ -241,7 +246,7 @@ export function CarSaleForm() {
                     <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                         {photoPreviews.map((src, index) => (
                             <div key={index} className="relative group aspect-square">
-                                <Image src={src} alt={`Car photo preview ${index + 1}`} layout="fill" objectFit="cover" className="rounded-md" data-ai-hint="car detail" />
+                                <Image src={src} alt={`Car photo preview ${index + 1}`} fill objectFit="cover" className="rounded-md" data-ai-hint="car detail" />
                                 <Button type="button" size="icon" variant="destructive" className="absolute top-1 right-1 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity" onClick={() => removePhoto(index)}><Trash2 className="h-4 w-4" /></Button>
                             </div>
                         ))}
@@ -277,12 +282,11 @@ export function CarSaleForm() {
             )}
           </CardContent>
 
-          <CardFooter className="flex justify-between">
+          <CardFooter className="flex justify-between pt-6">
             {step > 1 && step < 6 && ( <Button type="button" variant="outline" onClick={handleBack} disabled={isPending}> <ArrowLeft className="mr-2 h-4 w-4" /> Back </Button> )}
-            <div className={step === 1 ? 'w-full' : ''}>
-                 {step < 5 && ( <Button type="button" onClick={handleNext} className="w-full" disabled={isFetching}> 
-                    { isFetching && step === 1 ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null }
-                    { isFetching && step === 1 ? 'Fetching...' : 'Next' }
+            <div className={step === 1 ? 'w-full flex justify-end' : ''}>
+                 {step < 5 && step !== 1 && ( <Button type="button" onClick={handleNext} disabled={isFetching}> 
+                    Next
                  </Button> )}
                 {step === 5 && ( <Button type="submit" disabled={isPending} className="w-full"> {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} Submit Offer </Button> )}
             </div>
@@ -292,3 +296,5 @@ export function CarSaleForm() {
     </Card>
   );
 }
+
+    
