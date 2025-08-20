@@ -122,14 +122,16 @@ export function CarSaleForm() {
       toast({ variant: "destructive", title: "Error", description: result.error });
     } else if (result.success && result.data) {
       const { make, model, year } = result.data;
-      if (make) form.setValue("make", make, { shouldValidate: true });
-      if (model) form.setValue("model", model, { shouldValidate: true });
-      if (year) form.setValue("year", year, { shouldValidate: true });
+      if (make) form.setValue("make", make);
+      if (model) form.setValue("model", model);
+      if (year) form.setValue("year", year);
+      
       toast({ title: "Vehicle Found!", description: "We've pre-filled some details for you." });
       
-      const isValid = await form.trigger(["regNr", "make", "model", "year"]);
+      // Manually trigger validation and then move to next step
+      const isValid = await form.trigger(["make", "model", "year"]);
       if (isValid) {
-        setStep(s => s + 1);
+          setStep(s => s + 1);
       }
     }
   };
