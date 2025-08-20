@@ -128,11 +128,7 @@ export function CarSaleForm() {
       
       toast({ title: "Vehicle Found!", description: "We've pre-filled some details for you." });
       
-      // Manually trigger validation and then move to next step
-      const isValid = await form.trigger(["make", "model", "year"]);
-      if (isValid) {
-          setStep(s => s + 1);
-      }
+      setStep(s => s + 1);
     }
   };
 
