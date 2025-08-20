@@ -65,7 +65,7 @@ type FormSchemaType = z.infer<typeof formSchema>;
 
 const steps = [
   { id: 1, name: "Registration Number", icon: ScanLine, fields: ["regNr"] },
-  { id: 2, name: "Vehicle Details", icon: Wrench, fields: ["make", "model", "year", "mileage", "condition", "price"] },
+  { id: 2, name: "Vehicle Details", icon: Wrench, fields: ["mileage", "condition", "price"] },
   { id: 3, name: "Upload Photos", icon: Camera },
   { id: 4, name: "Contact Info", icon: User, fields: ["name", "email", "phone"] },
   { id: 5, name: "Review & Submit", icon: FileCheck2 },
@@ -126,7 +126,11 @@ export function CarSaleForm() {
       if (model) form.setValue("model", model, { shouldValidate: true });
       if (year) form.setValue("year", year, { shouldValidate: true });
       toast({ title: "Vehicle Found!", description: "We've pre-filled some details for you." });
-      setStep(s => s + 1);
+      
+      const isValid = await form.trigger(["make", "model", "year"]);
+      if (isValid) {
+        setStep(s => s + 1);
+      }
     }
   };
 
@@ -219,13 +223,26 @@ export function CarSaleForm() {
             )}
 
             {step === 2 && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField name="make" control={form.control} render={({ field }) => ( <FormItem><FormLabel>Make</FormLabel><FormControl><Input placeholder="e.g. Ford" {...field} /></FormControl><FormMessage /></FormItem> )} />
-                <FormField name="model" control={form.control} render={({ field }) => ( <FormItem><FormLabel>Model</FormLabel><FormControl><Input placeholder="e.g. Mustang" {...field} /></FormControl><FormMessage /></FormItem> )} />
-                <FormField name="year" control={form.control} render={({ field }) => ( <FormItem><FormLabel>Year</FormLabel><FormControl><Input type="number" placeholder="e.g. 2022" {...field} /></FormControl><FormMessage /></FormItem> )} />
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                    <div>
+                        <FormLabel>Make</FormLabel>
+                        <p className="font-medium">{form.getValues("make")}</p>
+                    </div>
+                    <div>
+                        <FormLabel>Model</FormLabel>
+                        <p className="font-medium">{form.getValues("model")}</p>
+                    </div>
+                     <div>
+                        <FormLabel>Year</FormLabel>
+                        <p className="font-medium">{form.getValues("year")}</p>
+                    </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <FormField name="mileage" control={form.control} render={({ field }) => ( <FormItem><FormLabel>Mileage (km)</FormLabel><FormControl><Input type="number" placeholder="e.g. 50000" {...field} /></FormControl><FormMessage /></FormItem> )} />
                 <FormField name="condition" control={form.control} render={({ field }) => ( <FormItem><FormLabel>Condition</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select condition" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Excellent">Excellent</SelectItem><SelectItem value="Good">Good</SelectItem><SelectItem value="Fair">Fair</SelectItem><SelectItem value="Poor">Poor</SelectItem></SelectContent></Select><FormMessage /></FormItem> )} />
                 <FormField name="price" control={form.control} render={({ field }) => ( <FormItem><FormLabel>Asking Price (DKK)</FormLabel><FormControl><Input type="number" placeholder="e.g. 250000" {...field} /></FormControl><FormMessage /></FormItem> )} />
+              </div>
               </div>
             )}
             
