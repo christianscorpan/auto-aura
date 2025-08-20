@@ -2,7 +2,7 @@
 "use server";
 
 import { z } from "zod";
-import cheerio from 'cheerio';
+import * as cheerio from 'cheerio';
 import { JSDOM } from 'jsdom';
 
 const formSchema = z.object({
