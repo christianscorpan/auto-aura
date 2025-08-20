@@ -127,7 +127,7 @@ export function CarSaleForm() {
       if (year) form.setValue("year", year, { shouldValidate: true });
       toast({ title: "Vehicle Found!", description: "We've pre-filled some details for you." });
       
-      const isValid = await form.trigger(["make", "model", "year"]);
+      const isValid = await form.trigger(["regNr", "make", "model", "year"]);
       if (isValid) {
         setStep(s => s + 1);
       }
@@ -294,7 +294,7 @@ export function CarSaleForm() {
           <CardFooter className="flex justify-between pt-6">
             {step > 1 && step < 6 && ( <Button type="button" variant="outline" onClick={handleBack} disabled={isPending}> <ArrowLeft className="mr-2 h-4 w-4" /> Back </Button> )}
             <div className={step === 1 ? 'w-full flex justify-end' : ''}>
-                 {step < 5 && step !== 1 && ( <Button type="button" onClick={handleNext} disabled={isFetching}> 
+                 {step < 5 && step !== 1 && ( <Button type="button" onClick={handleNext}> 
                     Next
                  </Button> )}
                 {step === 5 && ( <Button type="submit" disabled={isPending} className="w-full"> {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} Submit Offer </Button> )}
