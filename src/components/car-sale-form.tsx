@@ -109,8 +109,10 @@ export function CarSaleForm() {
 
   const handleFetchVehicleInfo = async () => {
     const regNr = form.getValues("regNr");
-    const isValid = await form.trigger(["regNr"]);
-    if (!isValid) return false;
+    if (!regNr || regNr.length < 2) {
+      form.setError("regNr", { type: "manual", message: "Danish reg. nr. is required." });
+      return;
+    }
 
     setIsFetching(true);
     const result = await getVehicleInfo(regNr);
@@ -118,27 +120,17 @@ export function CarSaleForm() {
 
     if (result.error) {
       toast({ variant: "destructive", title: "Error", description: result.error });
-      return false;
     } else if (result.success && result.data) {
       const { make, model, year } = result.data;
       if (make) form.setValue("make", make, { shouldValidate: true });
       if (model) form.setValue("model", model, { shouldValidate: true });
       if (year) form.setValue("year", year, { shouldValidate: true });
       toast({ title: "Vehicle Found!", description: "We've pre-filled some details for you." });
-      return true;
+      setStep(s => s + 1);
     }
-    return false;
   };
 
   const handleNext = async () => {
-    if (step === 1) {
-        const success = await handleFetchVehicleInfo();
-        if (success) {
-            setStep(s => s + 1);
-        }
-        return;
-    }
-
     const fields = steps[step - 1].fields as (keyof FormSchemaType)[] | undefined;
     const isValid = fields ? await form.trigger(fields) : true;
 
@@ -215,7 +207,7 @@ export function CarSaleForm() {
                       <FormControl>
                         <Input placeholder="e.g. AB12345" {...field} />
                       </FormControl>
-                      <Button type="button" onClick={handleNext} disabled={isFetching}>
+                      <Button type="button" onClick={handleFetchVehicleInfo} disabled={isFetching}>
                         {isFetching ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Search className="mr-2 h-4 w-4" />}
                         Find Vehicle
                       </Button>
@@ -296,5 +288,3 @@ export function CarSaleForm() {
     </Card>
   );
 }
-
-    
