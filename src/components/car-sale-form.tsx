@@ -15,6 +15,7 @@ import {
   ArrowLeft,
   Trash2,
   PartyPopper,
+  Search,
 } from "lucide-react";
 import React from "react";
 import { Button } from "@/components/ui/button";
@@ -44,7 +45,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { submitOffer } from "@/app/actions";
+import { submitOffer, getVehicleInfo } from "@/app/actions";
 import Image from "next/image";
 
 const formSchema = z.object({
@@ -73,6 +74,7 @@ const steps = [
 export function CarSaleForm() {
   const [step, setStep] = React.useState(1);
   const [isPending, startTransition] = React.useTransition();
+  const [isFetching, setIsFetching] = React.useState(false);
   const [photos, setPhotos] = React.useState<File[]>([]);
   const [photoPreviews, setPhotoPreviews] = React.useState<string[]>([]);
   const { toast } = useToast();
@@ -105,7 +107,33 @@ export function CarSaleForm() {
     });
   };
 
+  const handleFetchVehicleInfo = async () => {
+    const regNr = form.getValues("regNr");
+    const isValid = await form.trigger(["regNr"]);
+    if (!isValid) return;
+
+    setIsFetching(true);
+    const result = await getVehicleInfo(regNr);
+    setIsFetching(false);
+
+    if (result.error) {
+      toast({ variant: "destructive", title: "Error", description: result.error });
+    } else if (result.success && result.data) {
+      const { make, model, year } = result.data;
+      if (make) form.setValue("make", make, { shouldValidate: true });
+      if (model) form.setValue("model", model, { shouldValidate: true });
+      if (year) form.setValue("year", year, { shouldValidate: true });
+      toast({ title: "Vehicle Found!", description: "We've pre-filled the make, model, and year for you." });
+      setStep(2);
+    }
+  };
+
   const handleNext = async () => {
+    if (step === 1) {
+        await handleFetchVehicleInfo();
+        return;
+    }
+
     const fields = steps[step - 1].fields as (keyof FormSchemaType)[] | undefined;
     const isValid = fields ? await form.trigger(fields) : true;
 
@@ -178,7 +206,15 @@ export function CarSaleForm() {
               <FormField name="regNr" control={form.control} render={({ field }) => (
                   <FormItem>
                     <FormLabel>Danish Registration Number (Reg. nr.)</FormLabel>
-                    <FormControl><Input placeholder="e.g. AB12345" {...field} /></FormControl>
+                    <div className="flex gap-2">
+                      <FormControl>
+                        <Input placeholder="e.g. AB12345" {...field} />
+                      </FormControl>
+                      <Button type="button" onClick={handleFetchVehicleInfo} disabled={isFetching}>
+                        {isFetching ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Search className="mr-2 h-4 w-4" />}
+                        Find Vehicle
+                      </Button>
+                    </div>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -244,7 +280,10 @@ export function CarSaleForm() {
           <CardFooter className="flex justify-between">
             {step > 1 && step < 6 && ( <Button type="button" variant="outline" onClick={handleBack} disabled={isPending}> <ArrowLeft className="mr-2 h-4 w-4" /> Back </Button> )}
             <div className={step === 1 ? 'w-full' : ''}>
-                {step < 5 && ( <Button type="button" onClick={handleNext} className="w-full"> Next </Button> )}
+                 {step < 5 && ( <Button type="button" onClick={handleNext} className="w-full" disabled={isFetching}> 
+                    { isFetching && step === 1 ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null }
+                    { isFetching && step === 1 ? 'Fetching...' : 'Next' }
+                 </Button> )}
                 {step === 5 && ( <Button type="submit" disabled={isPending} className="w-full"> {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} Submit Offer </Button> )}
             </div>
           </CardFooter>
