@@ -234,9 +234,9 @@ export function CarSaleForm() {
                   <FormItem>
                     <FormLabel>Danish Registration Number</FormLabel>
                     <div className="flex gap-2">
-                      <div className="inline-flex items-center h-14 max-w-xs rounded-md border-2 border-red-600 bg-white overflow-hidden">
+                      <div className="inline-flex items-center h-14 max-w-xs rounded-md border-2 border-primary bg-white overflow-hidden">
                         <div className="flex items-center justify-center h-full w-12 bg-blue-900 border-r-2 border-gray-300">
-                          <Image src="/EU-section-with-DK.svg" alt="DK" width={37} height={54} className="object-cover" />
+                          <Image src="/EU-section-with-DK.svg" alt="DK" width={28} height={40} className="object-contain" />
                         </div>
                         <Input
                           aria-label="Danish registration number"
