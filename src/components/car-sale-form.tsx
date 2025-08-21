@@ -16,6 +16,7 @@ import {
   Trash2,
   PartyPopper,
   Search,
+  ArrowRight,
 } from "lucide-react";
 import React from "react";
 import { Button } from "@/components/ui/button";
@@ -36,7 +37,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import {
   Select,
   SelectContent,
@@ -111,7 +111,7 @@ export function CarSaleForm() {
     console.log("[FORM] 'Find Vehicle' button clicked.");
     const regNr = form.getValues("regNr");
     if (!regNr || regNr.length < 2) {
-      form.setError("regNr", { type: "manual", message: "Danish reg. nr. is required." });
+      form.setError("regNr", { type: "manual", message: "A valid registration number is required." });
       return;
     }
 
@@ -159,17 +159,25 @@ export function CarSaleForm() {
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const newFiles = Array.from(e.target.files);
-      const allFiles = [...photos, ...newFiles];
+      const allFiles = [...photos, ...newFiles].slice(0, 10); // Limit to 10 photos
       setPhotos(allFiles);
 
       const newPreviews = newFiles.map(file => URL.createObjectURL(file));
-      setPhotoPreviews(prev => [...prev, ...newPreviews]);
+      const allPreviews = [...photoPreviews, ...newPreviews].slice(0, 10);
+      
+      // Revoke old URLs that are no longer in use
+      photoPreviews.forEach(url => {
+        if (!allPreviews.includes(url)) {
+          URL.revokeObjectURL(url);
+        }
+      })
+      setPhotoPreviews(allPreviews);
     }
   };
   
   const removePhoto = (index: number) => {
-    setPhotos(photos.filter((_, i) => i !== index));
     URL.revokeObjectURL(photoPreviews[index]);
+    setPhotos(photos.filter((_, i) => i !== index));
     setPhotoPreviews(photoPreviews.filter((_, i) => i !== index));
   };
 
@@ -188,27 +196,31 @@ export function CarSaleForm() {
   
   if (step === 6) {
     return (
-        <Card className="shadow-lg">
+        <Card className="bg-card shadow-2xl border-0">
             <CardContent className="p-8 text-center flex flex-col items-center gap-4">
                 <PartyPopper className="w-16 h-16 text-primary" />
                 <h2 className="text-2xl font-bold">Offer Submitted!</h2>
                 <p className="text-muted-foreground">Thank you for your submission. We've received your offer and will contact you shortly.</p>
-                <Button onClick={resetForm}>Submit Another Car</Button>
+                <Button onClick={resetForm} variant="outline" className="mt-4">Submit Another Car</Button>
             </CardContent>
         </Card>
     )
   }
 
   return (
-    <Card className="shadow-lg">
+    <Card className="shadow-2xl border-0">
       <CardHeader>
-        <Progress value={(step / steps.length) * 100} className="mb-4" />
-        <CardTitle className="flex items-center gap-2">
-            {React.createElement(steps[step - 1].icon, { className: "h-6 w-6" })}
-            <span>{steps[step - 1].name}</span>
-        </CardTitle>
-        <CardDescription>
-            Step {step} of {steps.length}. Please fill out the details below.
+        <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+                 {React.createElement(steps[step - 1].icon, { className: "h-6 w-6 text-primary" })}
+                <span className="font-semibold text-lg">{steps[step - 1].name}</span>
+            </div>
+            <div className="text-sm text-muted-foreground">
+                Step {step} of {steps.length}
+            </div>
+        </div>
+         <CardDescription className="pt-2">
+           Please fill out the details for your vehicle.
         </CardDescription>
       </CardHeader>
       <Form {...form}>
@@ -220,46 +232,37 @@ export function CarSaleForm() {
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Danish Registration Number (Reg. nr.)</FormLabel>
+                    <FormLabel>Danish Registration Number</FormLabel>
                     <div className="flex gap-2">
-                      <FormControl>
-                        <div className="inline-flex">
-                          <div className="flex h-[62px] w-[220px] md:w-[240px] items-center overflow-hidden rounded-md border border-[#136EB0] bg-white focus-within:outline-none focus-within:ring-2 focus-within:ring-[#136EB0] focus-within:ring-offset-0">
-                            <img
-                              src="/EU-section-with-DK.svg"
-                              alt="DK"
-                              className="h-full w-[37px] border-r object-cover"
-                              draggable={false}
-                            />
-                            <Input
-                              aria-label="Danish registration number"
-                              placeholder="AB12345"
-                              maxLength={7}
-                              autoComplete="off"
-                              inputMode="text"
-                              className="h-full flex-1 min-w-0 rounded-none border-0 bg-transparent px-3 text-[28px] md:text-[36px] font-bold uppercase tracking-[0.04em] focus-visible:ring-0 focus-visible:ring-offset-0"
-                              value={field.value?.toUpperCase?.() || field.value}
-                              onChange={(e) => {
-                                const v = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "");
-                                field.onChange(v);
-                              }}
-                            />
-                          </div>
+                      <div className="inline-flex items-center h-14 max-w-xs rounded-md border-2 border-red-600 bg-white overflow-hidden">
+                        <div className="flex items-center justify-center h-full w-12 bg-blue-900 border-r-2 border-gray-300">
+                          <Image src="/EU-section-with-DK.svg" alt="DK" width={37} height={54} className="object-cover" />
                         </div>
-                      </FormControl>
+                        <Input
+                          aria-label="Danish registration number"
+                          placeholder="AB12345"
+                          maxLength={7}
+                          autoComplete="off"
+                          inputMode="text"
+                          className="h-full flex-1 min-w-0 rounded-none border-0 bg-transparent px-3 text-2xl md:text-3xl font-bold uppercase tracking-widest text-gray-700 focus-visible:ring-0 focus-visible:ring-offset-0"
+                          value={field.value?.toUpperCase?.() || field.value}
+                          onChange={(e) => {
+                            const v = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "");
+                            field.onChange(v);
+                          }}
+                        />
+                      </div>
                       <Button
                         type="button"
                         onClick={handleFetchVehicleInfo}
                         disabled={isFetching}
                         size="icon"
-                        variant="outline"
-                        aria-label="Find vehicle"
-                        className="h-[62px] w-[62px] rounded-md border-[#136EB0] text-muted-foreground focus-visible:ring-[#136EB0]"
+                        className="h-14 w-14 rounded-md"
                       >
                         {isFetching ? (
-                          <Loader2 className="h-7 w-7 animate-spin" />
+                          <Loader2 className="h-6 w-6 animate-spin" />
                         ) : (
-                          <Search className="h-7 w-7" />
+                          <Search className="h-6 w-6" />
                         )}
                       </Button>
                     </div>
@@ -270,8 +273,8 @@ export function CarSaleForm() {
             )}
 
             {step === 2 && (
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm p-4 bg-muted/50 rounded-lg">
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm p-4 bg-secondary rounded-lg">
                     <div>
                         <FormLabel className="text-muted-foreground">Make</FormLabel>
                         <p className="font-semibold text-lg">{form.getValues("make") || 'N/A'}</p>
@@ -285,7 +288,7 @@ export function CarSaleForm() {
                         <p className="font-semibold text-lg">{form.getValues("year") || 'N/A'}</p>
                     </div>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <FormField name="mileage" control={form.control} render={({ field }) => ( <FormItem><FormLabel>Mileage (km)</FormLabel><FormControl><Input type="number" placeholder="e.g. 50000" {...field} /></FormControl><FormMessage /></FormItem> )} />
                 <FormField name="condition" control={form.control} render={({ field }) => ( <FormItem><FormLabel>Condition</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select condition" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Excellent">Excellent</SelectItem><SelectItem value="Good">Good</SelectItem><SelectItem value="Fair">Fair</SelectItem><SelectItem value="Poor">Poor</SelectItem></SelectContent></Select><FormMessage /></FormItem> )} />
                 <FormField name="price" control={form.control} render={({ field }) => ( <FormItem><FormLabel>Asking Price (DKK)</FormLabel><FormControl><Input type="number" placeholder="e.g. 250000" {...field} /></FormControl><FormMessage /></FormItem> )} />
@@ -297,9 +300,9 @@ export function CarSaleForm() {
                 <div>
                     <FormLabel>Upload Car Photos</FormLabel>
                     <FormControl>
-                        <Input id="photo-upload" type="file" multiple accept="image/*" onChange={handlePhotoChange} className="mt-2 block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20" />
+                        <Input id="photo-upload" type="file" multiple accept="image/*" onChange={handlePhotoChange} className="mt-2 block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20" />
                     </FormControl>
-                    <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                    <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                         {photoPreviews.map((src, index) => (
                             <div key={index} className="relative group aspect-square">
                                 <Image src={src} alt={`Car photo preview ${index + 1}`} fill objectFit="cover" className="rounded-md" data-ai-hint="car detail" />
@@ -321,7 +324,7 @@ export function CarSaleForm() {
             {step === 5 && (
               <div className="space-y-6">
                 <h3 className="text-lg font-semibold">Please review your offer</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm p-4 bg-secondary rounded-lg">
                     <div><strong className="text-muted-foreground">Reg. Nr.:</strong> {form.getValues("regNr")}</div>
                     <div><strong className="text-muted-foreground">Make:</strong> {form.getValues("make")}</div>
                     <div><strong className="text-muted-foreground">Model:</strong> {form.getValues("model")}</div>
@@ -333,21 +336,21 @@ export function CarSaleForm() {
                     <div><strong className="text-muted-foreground">Email:</strong> {form.getValues("email")}</div>
                     <div><strong className="text-muted-foreground">Phone:</strong> {form.getValues("phone")}</div>
                 </div>
-                {photos.length > 0 && <div><strong className="text-muted-foreground">Photos:</strong> {photos.length} uploaded</div>}
+                {photos.length > 0 && <div className="p-4 bg-secondary rounded-lg"><strong className="text-muted-foreground">Photos:</strong> {photos.length} uploaded</div>}
               </div>
             )}
           </CardContent>
 
           <CardFooter className="flex justify-between pt-6">
-            {step > 1 && step < 6 && ( <Button type="button" variant="outline" onClick={handleBack} disabled={isPending}> <ArrowLeft className="mr-2 h-4 w-4" /> Back </Button> )}
+            {step > 1 && step < 6 ? ( <Button type="button" variant="ghost" onClick={handleBack} disabled={isPending}> <ArrowLeft className="mr-2 h-4 w-4" /> Back </Button> ) : <div />}
             <div className={step === 1 ? 'w-full flex justify-end' : ''}>
                  {step < 2 && ( <Button type="button" onClick={handleNext} className="invisible" > 
-                    Next
+                    Next <ArrowRight className="ml-2 h-4 w-4" />
                  </Button> )}
                  {step > 1 && step < 5 && ( <Button type="button" onClick={handleNext}> 
-                    Next
+                    Next <ArrowRight className="ml-2 h-4 w-4" />
                  </Button> )}
-                {step === 5 && ( <Button type="submit" disabled={isPending} className="w-full"> {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} Submit Offer </Button> )}
+                {step === 5 && ( <Button type="submit" disabled={isPending} className="w-full md:w-auto"> {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} Submit Offer </Button> )}
             </div>
           </CardFooter>
         </form>
