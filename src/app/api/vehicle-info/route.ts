@@ -28,7 +28,6 @@ async function getVehicleInfo(regNr: string) {
     };
   } catch (e: any) {
     console.error(`[API_ROUTE] Error fetching vehicle data for ${regNr}:`, e);
-    // The dmr.ts library throws an error for "No vehicle found"
     if (e.message && e.message.includes('No vehicle found')) {
         return { error: `No vehicle found with registration number: ${regNr}.` };
     }
@@ -44,7 +43,6 @@ export async function POST(request: Request) {
     }
     const result = await getVehicleInfo(regNr);
     if (result.error) {
-        // Use 404 for not found, 400 for other client-side errors
         const status = result.error.includes('No vehicle found') ? 404 : 400;
         return NextResponse.json(result, { status });
     }
