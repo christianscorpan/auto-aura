@@ -52,7 +52,7 @@ export async function POST(request: Request) {
         return NextResponse.json(result, { status });
     }
     return NextResponse.json(result);
-  } catch (error)
+  } catch (error) {
     console.error('[API_ROUTE] Error in POST handler:', error);
     return NextResponse.json({ error: 'An internal server error occurred.' }, { status: 500 });
   }
