@@ -215,15 +215,37 @@ export function CarSaleForm() {
         <form onSubmit={form.handleSubmit(processForm)}>
           <CardContent>
             {step === 1 && (
-              <FormField name="regNr" control={form.control} render={({ field }) => (
+              <FormField
+                name="regNr"
+                control={form.control}
+                render={({ field }) => (
                   <FormItem>
                     <FormLabel>Danish Registration Number (Reg. nr.)</FormLabel>
                     <div className="flex gap-2">
                       <FormControl>
-                        <Input placeholder="e.g. AB12345" {...field} />
+                        <div className="w-full">
+                          <div className="flex h-12 sm:h-14 items-center overflow-hidden rounded-md border bg-white ring-offset-background focus-within:outline-none focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
+                            <img
+                              src="/EU-section-with-DK.svg"
+                              alt="EU DK band"
+                              className="h-full w-10 sm:w-12 border-r object-cover"
+                            />
+                            <Input
+                              placeholder="e.g. AB12345"
+                              maxLength={7}
+                              autoComplete="off"
+                              className="h-full rounded-none border-0 bg-transparent text-lg sm:text-xl uppercase tracking-widest focus-visible:ring-0 focus-visible:ring-offset-0"
+                              {...field}
+                            />
+                          </div>
+                        </div>
                       </FormControl>
                       <Button type="button" onClick={handleFetchVehicleInfo} disabled={isFetching}>
-                        {isFetching ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Search className="mr-2 h-4 w-4" />}
+                        {isFetching ? (
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        ) : (
+                          <Search className="mr-2 h-4 w-4" />
+                        )}
                         Find Vehicle
                       </Button>
                     </div>
