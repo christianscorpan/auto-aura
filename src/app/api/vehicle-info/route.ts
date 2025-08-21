@@ -1,29 +1,26 @@
 
 import { NextResponse } from 'next/server';
-import { DMR } from '@/lib/dmr';
+import { getVehicle } from '@/lib/dmr.ts/src';
 
 async function getVehicleInfo(regNr: string) {
   console.log(`[API_ROUTE] Starting vehicle info fetch for: ${regNr}`);
   try {
-    const data = await DMR.vehicle(regNr);
+    const data = await getVehicle(regNr);
 
-    // The DMR library camelCases the keys, so "1. registrering" becomes "1Registrering"
-    // and "Mærke" becomes "maerke". We need to find the correct keys.
-    const makeKey = Object.keys(data).find(k => k.toLowerCase() === 'maerke' || k.toLowerCase() === 'make');
-    const modelKey = Object.keys(data).find(k => k.toLowerCase() === 'model');
-    const registrationKey = Object.keys(data).find(k => k.toLowerCase().includes('registrering'));
-
-    const make = makeKey ? data[makeKey] : null;
-    const model = modelKey ? data[modelKey] : null;
-    const firstRegistrationDate = registrationKey ? data[registrationKey] : null;
-
-    if (!make || !model || !firstRegistrationDate) {
-       console.error("[API_ROUTE] Incomplete data from DMR library for:", regNr, data);
-       return { error: "The vehicle registry didn't provide all required details. Please check the registration number." };
+    if (!data || !data.visKT) {
+        console.error("[API_ROUTE] Incomplete data from DMR library for:", regNr, data);
+        return { error: "The vehicle registry didn't provide complete data. Please check the registration number." };
     }
 
-    const year = new Date(firstRegistrationDate).getFullYear().toString();
+    const make = data.visKT.lblFabrikant?.value ?? null;
+    const model = data.visKT.lblModelAar?.value?.split(' ')[0] ?? null; // Often model and year are combined
+    const year = data.visKT.lblRegDato?.value ? new Date(data.visKT.lblRegDato.value).getFullYear().toString() : null;
 
+    if (!make || !model || !year) {
+       console.error("[API_ROUTE] Could not extract all required fields from DMR data:", { make, model, year, data });
+       return { error: "The vehicle registry didn't provide all required details. Please check the registration number." };
+    }
+    
     console.log(`[API_ROUTE] Final extracted data - Make: ${make}, Model: ${model}, Year: ${year}`);
 
     return {
@@ -51,7 +48,7 @@ export async function POST(request: Request) {
     }
     const result = await getVehicleInfo(regNr);
     if (result.error) {
-        const status = result.error.includes('No vehicle found') ? 404 : 400;
+        const status = result.error.includes('No vehicle found') ? 404 : 500; // Use 500 for server-side errors
         return NextResponse.json(result, { status });
     }
     return NextResponse.json(result);
