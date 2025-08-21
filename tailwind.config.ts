@@ -13,6 +13,7 @@ export default {
       fontFamily: {
         body: ['Inter', 'sans-serif'],
         headline: ['"Exo 2"', 'sans-serif'],
+        auto: ['AutoFont', 'sans-serif'],
         code: ['monospace'],
       },
       colors: {

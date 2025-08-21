@@ -1,4 +1,11 @@
 
+@font-face {
+  font-family: 'AutoFont';
+  src: url('/auto-font.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
