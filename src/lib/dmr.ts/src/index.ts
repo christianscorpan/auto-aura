@@ -1,3 +1,3 @@
 export * from './interfaces';
 export { scrape } from './scraper';
-export const getVehicle = scrape; // library-friendly alias
+export { scrape as getVehicle } from './scraper'; // library-friendly alias
