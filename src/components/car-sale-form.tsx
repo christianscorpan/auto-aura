@@ -45,7 +45,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { submitOffer } from "@/app/actions";
+import { submitOffer, getVehicleInfo } from "@/app/actions";
 import Image from "next/image";
 
 const formSchema = z.object({
@@ -117,16 +117,10 @@ export function CarSaleForm() {
 
     setIsFetching(true);
     try {
-      const response = await fetch('/api/vehicle-info', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ regNr }),
-      });
-      
-      const result = await response.json();
+      const result = await getVehicleInfo(regNr);
 
-      if (!response.ok || result.error) {
-        throw new Error(result.error || "Failed to fetch vehicle data.");
+      if (result.error) {
+        throw new Error(result.error);
       }
       
       if (result.success && result.data) {
@@ -140,7 +134,7 @@ export function CarSaleForm() {
         toast({ title: "Vehicle Found!", description: "We've pre-filled some details for you." });
       }
     } catch (error: any) {
-      console.error("[FORM ERROR] Failed to call vehicle API:", error);
+      console.error("[FORM ERROR] Failed to call vehicle action:", error);
       toast({
         variant: "destructive",
         title: "Error",

@@ -2,6 +2,7 @@
 "use server";
 
 import { z } from "zod";
+import { getVehicle } from '@/lib/dmr.ts/src';
 
 const formSchema = z.object({
   regNr: z.string().min(2, "Registration number is required."),
@@ -16,7 +17,43 @@ const formSchema = z.object({
   phone: z.string().min(8, "A valid phone number is required."),
 });
 
-// The getVehicleInfo function is no longer needed here as it's been moved to an API route.
+export async function getVehicleInfo(regNr: string) {
+  console.log(`[SERVER_ACTION] Starting vehicle info fetch for: ${regNr}`);
+  try {
+    const data = await getVehicle(regNr);
+
+    if (!data || !data.visKT) {
+        console.error("[SERVER_ACTION] Incomplete data from DMR library for:", regNr, data);
+        return { error: "The vehicle registry didn't provide complete data. Please check the registration number." };
+    }
+
+    const make = data.visKT.lblFabrikant?.value ?? null;
+    const model = data.visKT.lblModelAar?.value?.split(' ')[0] ?? null; // Often model and year are combined
+    const year = data.visKT.lblRegDato?.value ? new Date(data.visKT.lblRegDato.value).getFullYear().toString() : null;
+
+    if (!make || !model || !year) {
+       console.error("[SERVER_ACTION] Could not extract all required fields from DMR data:", { make, model, year, data });
+       return { error: "The vehicle registry didn't provide all required details. Please check the registration number." };
+    }
+    
+    console.log(`[SERVER_ACTION] Final extracted data - Make: ${make}, Model: ${model}, Year: ${year}`);
+
+    return {
+      success: true,
+      data: {
+        make: make,
+        model: model,
+        year: year,
+      }
+    };
+  } catch (e: any) {
+    console.error(`[SERVER_ACTION] Error fetching vehicle data for ${regNr}:`, e);
+    if (e.message && e.message.includes('No vehicle found')) {
+        return { error: `No vehicle found with registration number: ${regNr}.` };
+    }
+    return { error: `Failed to fetch vehicle data. The service might be unavailable or the registration number is invalid.` };
+  }
+}
 
 export async function submitOffer(formData: FormData) {
   const rawFormData = Object.fromEntries(formData.entries());
