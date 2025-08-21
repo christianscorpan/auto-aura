@@ -223,30 +223,44 @@ export function CarSaleForm() {
                     <FormLabel>Danish Registration Number (Reg. nr.)</FormLabel>
                     <div className="flex gap-2">
                       <FormControl>
-                        <div className="w-full">
-                          <div className="flex h-12 sm:h-14 items-center overflow-hidden rounded-md border bg-white ring-offset-background focus-within:outline-none focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
+                        <div className="inline-flex">
+                          <div className="flex h-[62px] w-[220px] md:w-[240px] items-center overflow-hidden rounded-md border border-[#136EB0] bg-white focus-within:outline-none focus-within:ring-2 focus-within:ring-[#136EB0] focus-within:ring-offset-0">
                             <img
                               src="/EU-section-with-DK.svg"
-                              alt="EU DK band"
-                              className="h-full w-10 sm:w-12 border-r object-cover"
+                              alt="DK"
+                              className="h-full w-[37px] border-r object-cover"
+                              draggable={false}
                             />
                             <Input
-                              placeholder="e.g. AB12345"
+                              aria-label="Danish registration number"
+                              placeholder="AB12345"
                               maxLength={7}
                               autoComplete="off"
-                              className="h-full rounded-none border-0 bg-transparent text-lg sm:text-xl uppercase tracking-widest focus-visible:ring-0 focus-visible:ring-offset-0"
-                              {...field}
+                              inputMode="text"
+                              className="h-full flex-1 min-w-0 rounded-none border-0 bg-transparent px-3 text-[28px] md:text-[36px] font-bold uppercase tracking-[0.04em] focus-visible:ring-0 focus-visible:ring-offset-0"
+                              value={field.value?.toUpperCase?.() || field.value}
+                              onChange={(e) => {
+                                const v = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "");
+                                field.onChange(v);
+                              }}
                             />
                           </div>
                         </div>
                       </FormControl>
-                      <Button type="button" onClick={handleFetchVehicleInfo} disabled={isFetching}>
+                      <Button
+                        type="button"
+                        onClick={handleFetchVehicleInfo}
+                        disabled={isFetching}
+                        size="icon"
+                        variant="outline"
+                        aria-label="Find vehicle"
+                        className="h-[62px] w-[62px] rounded-md border-[#136EB0] text-muted-foreground focus-visible:ring-[#136EB0]"
+                      >
                         {isFetching ? (
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          <Loader2 className="h-7 w-7 animate-spin" />
                         ) : (
-                          <Search className="mr-2 h-4 w-4" />
+                          <Search className="h-7 w-7" />
                         )}
-                        Find Vehicle
                       </Button>
                     </div>
                     <FormMessage />
