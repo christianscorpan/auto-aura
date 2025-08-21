@@ -215,9 +215,6 @@ export function CarSaleForm() {
                  {React.createElement(steps[step - 1].icon, { className: "h-6 w-6 text-primary" })}
                 <span className="font-semibold text-lg">{steps[step - 1].name}</span>
             </div>
-            <div className="text-sm text-muted-foreground">
-                Step {step} of {steps.length}
-            </div>
         </div>
          <CardDescription className="pt-2">
            Please fill out the details for your vehicle.
