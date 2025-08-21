@@ -21,35 +21,59 @@ export async function getVehicleInfo(regNr: string) {
   console.log(`[SERVER_ACTION] Starting vehicle info fetch for: ${regNr}`);
   try {
     const data = await getVehicle(regNr);
-
-    if (!data || !data.visKT) {
-        console.error("[SERVER_ACTION] Incomplete data from DMR library for:", regNr, data);
-        return { error: "The vehicle registry didn't provide complete data. Please check the registration number." };
+    if (!data) {
+      console.error("[SERVER_ACTION] No data from DMR library for:", regNr);
+      return { error: `No vehicle found with registration number: ${regNr}.` };
     }
 
-    const make = data.visKT.lblFabrikant?.value ?? null;
-    const model = data.visKT.lblModelAar?.value?.split(' ')[0] ?? null; // Often model and year are combined
-    const year = data.visKT.lblRegDato?.value ? new Date(data.visKT.lblRegDato.value).getFullYear().toString() : null;
+    // Prefer normalized fields introduced in the updated library
+    const brandVal = data.vehicle?.brand ?? null;
+    const modelVal = data.vehicle?.model ?? null;
+    const firstReg = data.registration?.firstRegistrationDate ?? null;
 
-    if (!make || !model || !year) {
-       console.error("[SERVER_ACTION] Could not extract all required fields from DMR data:", { make, model, year, data });
-       return { error: "The vehicle registry didn't provide all required details. Please check the registration number." };
+    // Fallbacks from visKT if needed
+    const makeVal = data.visKT?.lblFabrikant?.value ?? null;
+    const modelAarVal = data.visKT?.lblModelAar?.value as unknown;
+    const regDatoVal = data.visKT?.lblRegDato?.value as unknown;
+
+    const make = typeof brandVal === 'string' && brandVal.trim() ? brandVal.trim() : (typeof makeVal === 'string' && makeVal.trim() ? makeVal.trim() : '');
+    const model = typeof modelVal === 'string' ? modelVal.trim() : '';
+
+    let year: string | null = null;
+    if (firstReg instanceof Date) {
+      year = String(firstReg.getFullYear());
+    } else if (typeof modelAarVal === 'number') {
+      year = String(modelAarVal);
+    } else if (typeof modelAarVal === 'string' && /^\d{4}$/.test(modelAarVal)) {
+      year = modelAarVal;
+    } else if (regDatoVal instanceof Date) {
+      year = String(regDatoVal.getFullYear());
+    } else if (typeof regDatoVal === 'string') {
+      const d = new Date(regDatoVal);
+      if (!isNaN(d.getTime())) year = String(d.getFullYear());
     }
-    
-    console.log(`[SERVER_ACTION] Final extracted data - Make: ${make}, Model: ${model}, Year: ${year}`);
+
+    // Allow partial prefill: at minimum try to provide the year.
+    if (!year) {
+      console.warn('[SERVER_ACTION] Year could not be derived from DMR data, returning empty prefill.');
+    }
+    console.log(`[SERVER_ACTION] Prefill extracted - Make: ${make || '""'}, Model: ${model || '""'}, Year: ${year || '""'}`);
 
     return {
       success: true,
       data: {
         make: make,
         model: model,
-        year: year,
+        year: year ?? '',
       }
     };
   } catch (e: any) {
     console.error(`[SERVER_ACTION] Error fetching vehicle data for ${regNr}:`, e);
-    if (e.message && e.message.includes('No vehicle found')) {
+    if (e?.message && e.message.includes('No vehicle found')) {
         return { error: `No vehicle found with registration number: ${regNr}.` };
+    }
+    if (e?.name === 'MissingTokenError' || (e?.message && /token|dmrformtoken|action/i.test(e.message))) {
+        return { error: 'Vehicle registry page structure changed or is blocking automated requests. Please try again later.' };
     }
     return { error: `Failed to fetch vehicle data. The service might be unavailable or the registration number is invalid.` };
   }

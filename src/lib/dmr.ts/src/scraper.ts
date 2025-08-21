@@ -4,7 +4,7 @@ import { CookieJar } from 'tough-cookie';
 import * as cheerio from 'cheerio';
 import { URLSearchParams } from 'url';
 import { interpretValue } from './interpreter';
-import type { VehicleData, InspectionData, InsuranceData, DispensationData } from './interfaces';
+import type { VehicleData, InspectionData, InsuranceData, DispensationData, VehicleBasicData, RegistrationData } from './interfaces';
 
 wrapper(axios);
 
@@ -200,6 +200,61 @@ const parseDispensations = ($: cheerio.CheerioAPI): DispensationData | null => {
   return { taxi, dispensations, leasing } as DispensationData;
 };
 
+const parseKeyValueSection = ($: cheerio.CheerioAPI, titlePart: string): Record<string, string> => {
+  const out: Record<string, string> = {};
+  const header = $('h3').filter((_, el) => $(el).text().toLowerCase().includes(titlePart.toLowerCase())).first();
+  if (!header.length) return out;
+  // Find the closest .bluebox after the header
+  const blue = header.nextAll('.bluebox').first();
+  const pairs = blue.find('.keyvalue, .notrequired.keyvalue');
+  pairs.each((_, el) => {
+    const key = $(el).find('.key').text().replace(/:\s*$/, '').replace(/\s+/g, ' ').trim();
+    const value = $(el).find('.value').text().replace(/\s+/g, ' ').trim();
+    if (key) out[key] = value;
+  });
+  return out;
+};
+
+const parseFirstPageBasics = ($: cheerio.CheerioAPI): { vehicle: VehicleBasicData | null; registration: RegistrationData | null } => {
+  const vehPairs = parseKeyValueSection($, 'Køretøj');
+  const regPairs = parseKeyValueSection($, 'Registrerings');
+
+  let vehicle: VehicleBasicData | null = null;
+  if (Object.keys(vehPairs).length) {
+    const mmv = vehPairs['Mærke, Model, Variant'] || vehPairs['Mærke, Model, Variant:'] || '';
+    let brand: string | null = null, model: string | null = null, variant: string | null = null;
+    if (mmv) {
+      const parts = mmv.split(',').map(s => s.trim()).filter(Boolean);
+      brand = parts[0] || null;
+      model = parts[1] || null;
+      variant = parts.slice(2).join(', ') || null;
+    }
+    const lastChangeRaw = vehPairs['Seneste ændring'] || vehPairs['Seneste ændring:'] || '';
+    const lastChangeVal = interpretValue(lastChangeRaw);
+    vehicle = {
+      vin: (vehPairs['Stelnummer'] || vehPairs['Stelnummer:'] || null) || null,
+      brand,
+      model,
+      variant,
+      type: (vehPairs['Art'] || vehPairs['Art:'] || null) || null,
+      lastChange: lastChangeVal instanceof Date ? lastChangeVal : null,
+    };
+  }
+
+  let registration: RegistrationData | null = null;
+  if (Object.keys(regPairs).length) {
+    const firstRegVal = interpretValue(regPairs['Første registreringsdato'] || regPairs['Første registrerings3;dato'] || regPairs['Første registrerings3;dato:'] || '');
+    registration = {
+      registrationNumber: (regPairs['Registreringsnummer'] || regPairs['Registreringsnummer:'] || null) || null,
+      firstRegistrationDate: firstRegVal instanceof Date ? firstRegVal : null,
+      usage: (regPairs['Anvendelse'] || regPairs['Anvendelse:'] || null) || null,
+      lastChange: (regPairs['Seneste ændring'] || regPairs['Seneste ændring:'] || null) || null,
+    };
+  }
+
+  return { vehicle, registration };
+};
+
 export const scrape = async (licensePlate: string): Promise<VehicleData | null> => {
   const jar = new CookieJar();
   const session = axios.create({ jar, timeout: DEFAULT_TIMEOUT_MS });
@@ -227,6 +282,7 @@ export const scrape = async (licensePlate: string): Promise<VehicleData | null> 
   const inspectionsAcc: InspectionData[] = parseInspections($page1);
   let insuranceAcc: InsuranceData | null = parseInsurance($page1);
   let dispAcc: DispensationData | null = parseDispensations($page1);
+  const firstPageBasics = parseFirstPageBasics($page1);
 
   // Collect all tab links instead of only the active one
   const tabLinks = new Set<string>();
@@ -300,6 +356,8 @@ export const scrape = async (licensePlate: string): Promise<VehicleData | null> 
   })();
 
   const result: VehicleData = {
+    vehicle: firstPageBasics.vehicle ?? null,
+    registration: firstPageBasics.registration ?? null,
     visKT: (vehicleData as any).visKT ?? null,
     opretKT: (vehicleData as any).opretKT ?? null,
     insurance: insuranceAcc ?? null,

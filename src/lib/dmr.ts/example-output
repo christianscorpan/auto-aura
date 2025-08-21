@@ -1,0 +1,857 @@
+{
+  "vehicle": {
+    "vin": "WVGZZZE2ZNP011009",
+    "brand": "VOLKSWAGEN",
+    "model": "ID.4",
+    "variant": "Elektro motor 204 1-trins-automatisk",
+    "type": "Personbil",
+    "lastChange": "2022-03-30T00:00:00.000Z"
+  },
+  "registration": {
+    "registrationNumber": "BJ99821",
+    "firstRegistrationDate": null,
+    "usage": "Taxikørsel",
+    "lastChange": "Registreret d. 30-03-2022"
+  },
+  "visKT": {
+    "lblHstrskVsnng": {
+      "description": "Angiv eventuelt dato for historisk visning",
+      "value": "For at se hvordan køretøjet så i på en bestemt dato, kan du indtaste eller vælge datoen ved hjælp af datovælgeren og klikke \"Hent\".\n\n\t\t\t\n\t\t\t\n\n\n\n\n\n\n\n\n\n\nLuk"
+    },
+    "lblEFTpeGodk": {
+      "description": "EF-Type-godkendelsenr.",
+      "value": {
+        "numeric": 1,
+        "unit": "e*2018/858*00004*05"
+      }
+    },
+    "lblTpeAnmeldNum": {
+      "description": "Typeanmeldelses­nummer/bremsedata-erklæringsnummer",
+      "value": null
+    },
+    "lblSupplAnven": {
+      "description": "Supplerende anvendelser",
+      "value": null
+    },
+    "lblStatus": {
+      "description": "Status",
+      "value": "Registreret (har fået tilknyttet en gyldig registrering)"
+    },
+    "lblType": {
+      "description": "Type",
+      "value": {
+        "numeric": 2,
+        "unit": "E"
+      }
+    },
+    "lblEUVar": {
+      "description": "EU-variant",
+      "value": null
+    },
+    "lblEUVer": {
+      "description": "EU-version",
+      "value": null
+    },
+    "lblKategori": {
+      "description": "Kategori",
+      "value": {
+        "numeric": 1,
+        "unit": "M"
+      }
+    },
+    "lblFabrikant": {
+      "description": "Fabrikant",
+      "value": null
+    },
+    "lblAnmodVfAarsag": {
+      "description": "Anmodningsårsag",
+      "value": null
+    },
+    "lblAnmodVfKm": {
+      "description": "Kilometerstand (.000 km)",
+      "value": null
+    },
+    "lblAnmodVfKtStand": {
+      "description": "Køretøjes stand",
+      "value": null
+    },
+    "lblKID": {
+      "description": "KøretøjsID",
+      "value": 9000000004310710
+    },
+    "lblStelnumSidevogn": {
+      "description": "Stelnummer tilkoblet sidevogn",
+      "value": null
+    },
+    "lblFarve": {
+      "description": "Farve",
+      "value": "Grå"
+    },
+    "lblModelAar": {
+      "description": "Model-år",
+      "value": 2022
+    },
+    "lblRegDato": {
+      "description": "1. registreringsdato",
+      "value": "2022-03-30T00:00:00.000Z"
+    },
+    "lblIbrugtagningDato": {
+      "description": "Ibrugtagningsdato",
+      "value": null
+    },
+    "lblNCAP": {
+      "description": "Bestået NCAP test med mindst 5 stjerner",
+      "value": false
+    },
+    "lblFuelmode": {
+      "description": "Fuelmode",
+      "value": "Monofuel"
+    },
+    "lblVejvenligLuftaffjedring": {
+      "description": "Vejvenlig luftaf­fjedring",
+      "value": null
+    },
+    "lblKilometerStand": {
+      "description": "Kilometerstand (.000 km)",
+      "value": 229
+    },
+    "lblKilometerStandDokumentation": {
+      "description": "Dokumentation for kilometerstand",
+      "value": false
+    },
+    "lblAndreBem": {
+      "description": "Bemærkninger for stand",
+      "value": null
+    },
+    "lblKTStand": {
+      "description": "Køretøj stand",
+      "value": null
+    },
+    "lblTrafikskade": {
+      "description": "Trafikskade",
+      "value": false
+    },
+    "lblVeteranKoeretoejOriginal": {
+      "description": "Original veterankøretøj",
+      "value": false
+    },
+    "lblAndetUdstyr": {
+      "description": "Andet udstyr",
+      "value": {
+        "numeric": 19,
+        "unit": "Opvarmelig forrude, Forsæder med indstillelig varme, \" Letmetalfælge, Climatronic klimanlæg 2 zoner, 2FT Multifunktionslæderrat med varme, 125 kW DC opladning, WPU Varmepumpe, Thermostyring, 5V5V Mangan grå metallic, 70B Nødladekabel, 1M6 Anhængertræk, svingbart med el-frigørelse, PBN Komfortpakke Plus"
+      }
+    },
+    "lblTekTotVgt": {
+      "description": "Teknisk totalvægt",
+      "value": {
+        "numeric": 2660,
+        "unit": "kg"
+      }
+    },
+    "lblTtlVgt": {
+      "description": "Totalvægt",
+      "value": {
+        "numeric": 2660,
+        "unit": "kg"
+      }
+    },
+    "lblEgnVgt": {
+      "description": "Egenvægt",
+      "value": null
+    },
+    "lblMin": {
+      "description": "Minimum",
+      "value": null
+    },
+    "lblMax": {
+      "description": "Maksimum",
+      "value": null
+    },
+    "lblVVrdLftAffj": {
+      "description": "V-værdi ved luftaffjedring",
+      "value": null
+    },
+    "lblVVrdMekAffj": {
+      "description": "V-værdi ved mekanisk affjedring",
+      "value": null
+    },
+    "lblVgntgVgt": {
+      "description": "Vogntogsvægt",
+      "value": {
+        "numeric": 3660,
+        "unit": "kg"
+      }
+    },
+    "lblSkmlBlstn": {
+      "description": "Skammel belastning",
+      "value": null
+    },
+    "lblTlkbAnrdn": {
+      "description": "Tilkoblingsanordning",
+      "value": true
+    },
+    "lblMedBrms": {
+      "description": "Med bremser",
+      "value": null
+    },
+    "lblUdBrms": {
+      "description": "Uden bremser",
+      "value": null
+    },
+    "lblTtlvgtPhngsvgn": {
+      "description": "Totalvægt for påhængsvogn",
+      "value": null
+    },
+    "lblMrkng": {
+      "description": "Mærkning",
+      "value": "EBJ"
+    },
+    "lblDrvKrft": {
+      "description": "Drivkraft",
+      "value": "El"
+    },
+    "lblPluginHybrid": {
+      "description": "Plugin hybrid",
+      "value": false
+    },
+    "lblSlgVlmn": {
+      "description": "Slagvolumen",
+      "value": {
+        "numeric": 0,
+        "unit": "cm3"
+      }
+    },
+    "lblSrstEffkt": {
+      "description": "Største effekt",
+      "value": {
+        "numeric": 150,
+        "unit": "kW"
+      }
+    },
+    "lblAntlClndr": {
+      "description": "Antal cylindre",
+      "value": 0
+    },
+    "lblMaaleNorm": {
+      "description": "Målenorm",
+      "value": null
+    },
+    "lblBraendstofForbrugMaalt": {
+      "description": "Brændstofforbrug målt",
+      "value": null
+    },
+    "lblElektriskForbrugMaalt": {
+      "description": "Elektriskforbrug målt",
+      "value": {
+        "numeric": 175.6,
+        "unit": "Wh/Km"
+      }
+    },
+    "lblCO2Udslp": {
+      "description": "CO2-udslip",
+      "value": {
+        "numeric": 0,
+        "unit": "g/km"
+      }
+    },
+    "lblBrndsffrbrg": {
+      "description": "Brændstofforbrug",
+      "value": null
+    },
+    "lblElektriskForbrug": {
+      "description": "Elektrisk forbrug",
+      "value": {
+        "numeric": 145.1,
+        "unit": "Wh/Km"
+      }
+    },
+    "lblBeregnetBrndsffrbrg": {
+      "description": "Samlet beregnet brændstofforbrug",
+      "value": {
+        "numeric": 62.9,
+        "unit": "km/l"
+      }
+    },
+    "lblMxHstghd": {
+      "description": "Maksimal hastighed",
+      "value": {
+        "numeric": 160,
+        "unit": "km/t"
+      }
+    },
+    "lblElektriskRaekkevidde": {
+      "description": "Elektrisk Rækkevidde",
+      "value": 512
+    },
+    "lblBatteriKapacitet": {
+      "description": "Batteri Kapacitet",
+      "value": 89.9
+    },
+    "lblCO2UdslipBeregnet": {
+      "description": "Samlet beregnet CO2-udslip",
+      "value": 0
+    },
+    "lblKrsrTpe": {
+      "description": "Karrosseritype",
+      "value": "Stationcar"
+    },
+    "lblSpplKrsrTpe": {
+      "description": "Supplerende type",
+      "value": null
+    },
+    "lblAntlDre": {
+      "description": "Antal døre",
+      "value": 4
+    },
+    "lblFlgDk": {
+      "description": "Fælge/dæk",
+      "value": {
+        "numeric": 1,
+        "unit": ". aksel: 235/55 R19 101T           / 8,0JX19 ET45         / A   / C1. 2. aksel: 255/50 R19 103T           / 8,0JX19 ET45         / A   / C1\n\t  \t\n\t  \t\n  \t\n  \n    \n      tommer/mm"
+      }
+    },
+    "lblSprVddnFr": {
+      "description": "Forrest",
+      "value": null
+    },
+    "lblSprVddnBg": {
+      "description": "Bagerst",
+      "value": null
+    },
+    "lblStlNrAnbrgls": {
+      "description": "Anbringelse af stelnummer",
+      "value": "I bagagerum, midtfor, ved bagsæderyg."
+    },
+    "lblPsgrAntl": {
+      "description": "Passagerantal",
+      "value": 4
+    },
+    "lblSdPldsMn": {
+      "description": "Minimum",
+      "value": null
+    },
+    "lblSdPldsMks": {
+      "description": "Maksimum",
+      "value": null
+    },
+    "lblStpldsrMn": {
+      "description": "Minimum",
+      "value": null
+    },
+    "lblStpldsrMks": {
+      "description": "Maksimum",
+      "value": null
+    },
+    "lblAntl": {
+      "description": "Antal",
+      "value": 2
+    },
+    "lblAfstnd": {
+      "description": "Afstand",
+      "value": {
+        "numeric": 2771,
+        "unit": "mm"
+      }
+    },
+    "lblNr": {
+      "description": "Trækkende aksel nummer",
+      "value": 2
+    },
+    "lblSrstTrk": {
+      "description": "Største tryk",
+      "value": {
+        "numeric": 1530,
+        "unit": "kg"
+      }
+    },
+    "lblTlldtTrk": {
+      "description": "Tilladt tryk (sættevogn)",
+      "value": null
+    },
+    "lblVgntgAkslAntl": {
+      "description": "Skatte akselantal",
+      "value": null
+    },
+    "lblVgntgAksltrk": {
+      "description": "Skatte akseltryk",
+      "value": null
+    },
+    "lblRgtthd": {
+      "description": "Røgtæthed",
+      "value": null
+    },
+    "lblVed": {
+      "description": "ved",
+      "value": null
+    },
+    "lblCO": {
+      "description": "CO",
+      "value": null
+    },
+    "lblHC": {
+      "description": "HC+NOX",
+      "value": null
+    },
+    "lblNOX": {
+      "description": "NOX",
+      "value": null
+    },
+    "lblPrtklr": {
+      "description": "Partikler",
+      "value": null
+    },
+    "lblPrtklfltr": {
+      "description": "Partikelfilter",
+      "value": null
+    },
+    "lblEftrMntrtPrtklfltr": {
+      "description": "Eftermonteret partikelfilter",
+      "value": null
+    },
+    "lblKoeretoejGruppe": {
+      "description": "Køretøjgruppe",
+      "value": null
+    },
+    "lblKoeretoejUndergruppe": {
+      "description": "Køretøjundergruppe",
+      "value": null
+    },
+    "lblSpecifikCO2Emission": {
+      "description": "Køretøjets specifikke CO2-emission",
+      "value": null
+    },
+    "lblNyttelastvaerdi": {
+      "description": "Gennemsnitlig nyttelastværdi",
+      "value": null
+    },
+    "lblNulemissionskoeretoej": {
+      "description": "Tungt nul-emissions køretøj",
+      "value": null
+    },
+    "lblSovekabine": {
+      "description": "Sovekabine",
+      "value": null
+    },
+    "lblCO2EmissionsKlasse": {
+      "description": "CO2-emissionsklasse",
+      "value": null
+    },
+    "lblOmklassificeringsdato": {
+      "description": "Omklassificeringsdato",
+      "value": null
+    },
+    "lblEffektivitetsForholdRelevant": {
+      "description": "Effektivitetsforhold relevant",
+      "value": null
+    },
+    "lblVolumenorientering": {
+      "description": "Volumenorientering",
+      "value": null
+    },
+    "lblEffektivitetsForholdM3": {
+      "description": "Effektivitetsforhold - M3",
+      "value": null
+    },
+    "lblEffektivitetsForholdTon": {
+      "description": "Effektivitetsforhold - Ton",
+      "value": null
+    },
+    "lblStndStj": {
+      "description": "Standstøj",
+      "value": {
+        "numeric": 0,
+        "unit": "db(A"
+      }
+    },
+    "lblStndStjVed": {
+      "description": "ved",
+      "value": null
+    },
+    "lblKrslsstj": {
+      "description": "Kørselsstøj",
+      "value": {
+        "numeric": 65,
+        "unit": "db(A"
+      }
+    },
+    "lblErnrm": {
+      "description": "Euronorm",
+      "value": "EEV"
+    },
+    "lblInnvtvTknk": {
+      "description": "Innovativ teknik",
+      "value": false
+    },
+    "lblCO2Sprs": {
+      "description": "CO2 spares",
+      "value": null
+    },
+    "lblFrekvensForSyn": {
+      "description": "Frekvens for periodisk syn",
+      "value": {
+        "numeric": 1,
+        "unit": "Første gang efter  år, herefter hvert år"
+      }
+    },
+    "lblBeregnetPeriodiskSynGyldigTil": {
+      "description": "Beregnet dato for næste indkaldelse til periodisk syn",
+      "value": "2026-04-15T00:00:00.000Z"
+    },
+    "lblAngvBgrPrd": {
+      "description": "Angiv begrænset periode for visning",
+      "value": {
+        "numeric": 24,
+        "unit": "Du kan begrænse antallet af synsresultater ved at angive en periode, du vil se synsresultater for. Dato skal have formatet DD-MM-YYYY, fx -12-2011, eller vælges ved hjælp af datovælgeren.\n\n\t\t\t\n\t\t\t\n\n\n\n\n\n\n\n\n\n\nLuk"
+      }
+    },
+    "lblFra": {
+      "description": "Fra",
+      "value": null
+    },
+    "lblTil": {
+      "description": "Til",
+      "value": null
+    }
+  },
+  "opretKT": {
+    "chk1Eller2KlimaZone": {
+      "description": "1- eller 2-zone klima",
+      "value": true
+    },
+    "chk3Eller4ZoneKlima": {
+      "description": "3- eller 4-zone klima",
+      "value": false
+    },
+    "chkAfstandsradar": {
+      "description": "Afstandsradar",
+      "value": true
+    },
+    "chkFartpilot": {
+      "description": "Aktiv fartpilot",
+      "value": true
+    },
+    "lblSelealarm": {
+      "description": "Antal selealarmer",
+      "value": {
+        "numeric": 5,
+        "unit": "Antallet af selealarmer i køretøjet havde tidligere indflydelse på registreringsafgiften.\n\n\t\t\t\n\t\t\t\n\n\n\n\n\n\n\n\n\n\nLuk"
+      }
+    },
+    "chkBakkamera": {
+      "description": "Bakkamera",
+      "value": false
+    },
+    "chkElopvarmetForrude": {
+      "description": "El-opvarmet forrude",
+      "value": false
+    },
+    "chkElektriskBagklap": {
+      "description": "Elektrisk bagklap",
+      "value": false
+    },
+    "chkElektriskLukningAfDoere": {
+      "description": "Elektrisk lukning af døre",
+      "value": false
+    },
+    "chkHeadUpDisplay": {
+      "description": "Head-up display",
+      "value": false
+    },
+    "chkHiFiMusikanlaeg": {
+      "description": "HiFi musikanlæg",
+      "value": false
+    },
+    "chkKeyLessGoNoeglefri": {
+      "description": "Key-less go (nøglefri)",
+      "value": true
+    },
+    "chkLinievogter": {
+      "description": "Linievogter",
+      "value": true
+    },
+    "chkKlimaanlaegManuel": {
+      "description": "Manuel Aircondition",
+      "value": false
+    },
+    "chkNatsynsudstyr": {
+      "description": "Natsyns-udstyr",
+      "value": false
+    },
+    "chkNavigationssystem": {
+      "description": "Navigationssystem med skærm",
+      "value": true
+    },
+    "chkOriginalTyverialarm": {
+      "description": "Original tyverialarm",
+      "value": false
+    },
+    "chkParkeringsassistent": {
+      "description": "Parkeringsassistent",
+      "value": true
+    },
+    "chkParkeringskontrolBag": {
+      "description": "Parkeringskontrol bag",
+      "value": true
+    },
+    "chkParkeringskontrolFor": {
+      "description": "Parkeringskontrol for",
+      "value": true
+    },
+    "chkSolcellekoeling": {
+      "description": "Solcellekøling, kabine",
+      "value": false
+    },
+    "chkStemmestyring": {
+      "description": "Stemmestyring",
+      "value": false
+    },
+    "chkVognbaneskiftAlarm": {
+      "description": "Vognbaneskift-alarm",
+      "value": true
+    },
+    "chkSaederaekker": {
+      "description": "3 el. flere sæderækker",
+      "value": false
+    },
+    "chkDobbeltkabine": {
+      "description": "Dobbeltkabine",
+      "value": false
+    },
+    "chkElSoltag": {
+      "description": "El-soltag",
+      "value": false
+    },
+    "chkSiderudeVarerum": {
+      "description": "Er bilen uden siderude i varerummet bag førersædet?",
+      "value": false
+    },
+    "chkGlastag": {
+      "description": "Glastag",
+      "value": false
+    },
+    "chkKurvelys": {
+      "description": "Kurvelys",
+      "value": false
+    },
+    "chkMetalfoldetag": {
+      "description": "Metalfoldetag",
+      "value": false
+    },
+    "chkMetallak": {
+      "description": "Metallak",
+      "value": false
+    },
+    "chkOmbyggetKarrosseri": {
+      "description": "Ombygget karrosseri",
+      "value": false
+    },
+    "chkTarga": {
+      "description": "Targa",
+      "value": false
+    },
+    "chkXenonLys": {
+      "description": "Xenon forlygter",
+      "value": false
+    },
+    "chk6GearManuel": {
+      "description": "6-gear manuel",
+      "value": false
+    },
+    "chkEspElektroniskStabiliseringsProgram": {
+      "description": "ESC stabilitetskontrol",
+      "value": true
+    },
+    "chkKompressor": {
+      "description": "Kompressor",
+      "value": false
+    },
+    "chkBraendstoffyr": {
+      "description": "Motor/kabinevarmer",
+      "value": false
+    },
+    "chkMotornummer": {
+      "description": "Motornummer",
+      "value": false
+    },
+    "chkTunetMotor": {
+      "description": "Tunet/anden motor",
+      "value": false
+    },
+    "chkAbsBremser": {
+      "description": "ABS bremser",
+      "value": true
+    },
+    "chkKeramiskeSkiver": {
+      "description": "Keramiske skiver",
+      "value": false
+    },
+    "chkSkivebremserBag": {
+      "description": "Skivebremser bag",
+      "value": false
+    },
+    "chkSkivebremserFor": {
+      "description": "Skivebremser for",
+      "value": false
+    },
+    "chkAffjedretStel": {
+      "description": "Affjedret stel",
+      "value": false
+    },
+    "chkElektroniskDaempere": {
+      "description": "Elektroniske dæmpere",
+      "value": false
+    },
+    "chkLuftaffjedring": {
+      "description": "Luftaffjedring",
+      "value": false
+    },
+    "chkNiveauregulering": {
+      "description": "Niveauregulering",
+      "value": false
+    },
+    "chkOmbyggetStel": {
+      "description": "Ombygget stel",
+      "value": false
+    },
+    "chkStiftStel": {
+      "description": "Stift stel",
+      "value": false
+    },
+    "chkHjulStoerreEnd20In": {
+      "description": "Større hjul end 20\"",
+      "value": false
+    },
+    "lblAirbags": {
+      "description": "Antal airbags",
+      "value": {
+        "numeric": 7,
+        "unit": "Antallet af airbags i køretøjet havde tidligere indflydelse på registreringsafgiften.\n\n\t\t\t\n\t\t\t\n\n\n\n\n\n\n\n\n\n\nLuk"
+      }
+    },
+    "chkRadio": {
+      "description": "Radio",
+      "value": true
+    },
+    "chkTrinloestGear": {
+      "description": "Automatgear",
+      "value": true
+    },
+    "chkFirehjulstraek": {
+      "description": "Firehjulstræk (4WD)",
+      "value": false
+    },
+    "chkRatbetjentGear": {
+      "description": "Ratbetjent gear",
+      "value": false
+    },
+    "chkLaedersaeder": {
+      "description": "Del-lædersæder",
+      "value": false
+    },
+    "chkElGardinerBagdoere": {
+      "description": "El-gardiner i bagdøre",
+      "value": false
+    },
+    "chkElGardinerBagrude": {
+      "description": "El-gardiner i bagrude",
+      "value": false
+    },
+    "chkElIndstSaederBag": {
+      "description": "El-indstillelige sæder bag",
+      "value": false
+    },
+    "chkFasteSidetasker": {
+      "description": "Faste sidetasker",
+      "value": false
+    },
+    "chkIntegreretBarnesaede": {
+      "description": "Integreret barnesæde",
+      "value": {
+        "numeric": 0,
+        "unit": "Antallet af Integreret barnesæder i køretøjet havde tidligere indflydelse på registreringsafgiften.\n\n\t\t\t\n\t\t\t\n\n\n\n\n\n\n\n\n\n\nLuk"
+      }
+    },
+    "chkRuskindAlcantara": {
+      "description": "Læder/skindsæder",
+      "value": false
+    },
+    "chkSaedemassage": {
+      "description": "Massagesæder",
+      "value": false
+    },
+    "chkMemorySaederFor": {
+      "description": "Memory-sæder for",
+      "value": false
+    },
+    "chkSportssaeder": {
+      "description": "Sport-/komfortsæder",
+      "value": false
+    },
+    "chkVentilationISaeder": {
+      "description": "Ventilation i sæder",
+      "value": false
+    },
+    "chkElIndstilleligtRat": {
+      "description": "El-indstilleligt rat",
+      "value": false
+    },
+    "chkHoejrestyring": {
+      "description": "Højrestyring",
+      "value": false
+    },
+    "chkLangForgaffel": {
+      "description": "Lang forgaffel",
+      "value": false
+    },
+    "chkMultifunktionsrat": {
+      "description": "Multifunktionsrat",
+      "value": true
+    },
+    "chkOpvarmetRat": {
+      "description": "Opvarmet rat/styr",
+      "value": false
+    },
+    "chkTurbo": {
+      "description": "Turbo",
+      "value": false
+    }
+  },
+  "insurance": {
+    "company": "PROTECTOR FORSIKRING ASA",
+    "number": null,
+    "created": "2024-01-01T00:00:00.000Z",
+    "is_active": true
+  },
+  "inspections": [
+    {
+      "date": "2025-04-10T00:00:00.000Z",
+      "status": "Godkendt"
+    },
+    {
+      "date": "2024-04-29T00:00:00.000Z",
+      "status": "Godkendt"
+    },
+    {
+      "date": "2024-04-02T00:00:00.000Z",
+      "status": "Kan godkendes ved omsyn af omsynsvirksomhed"
+    },
+    {
+      "date": "2023-03-20T00:00:00.000Z",
+      "status": "Godkendt"
+    },
+    {
+      "date": "2023-03-14T00:00:00.000Z",
+      "status": "Ikke godkendt kan genfremstilles"
+    },
+    {
+      "date": "2022-03-23T00:00:00.000Z",
+      "status": "Godkendt"
+    }
+  ],
+  "dispensations": {
+    "taxi": true,
+    "dispensations": null,
+    "leasing": null
+  }
+}

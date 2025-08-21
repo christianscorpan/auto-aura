@@ -1,4 +1,5 @@
 import type {Metadata} from 'next';
+export const runtime = 'nodejs';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 

@@ -3,6 +3,22 @@ export interface InspectionData {
   status: string | null;
 }
 
+export interface VehicleBasicData {
+  vin: string | null;
+  brand?: string | null;
+  model?: string | null;
+  variant?: string | null;
+  type?: string | null;
+  lastChange?: Date | null;
+}
+
+export interface RegistrationData {
+  registrationNumber?: string | null;
+  firstRegistrationDate?: Date | null;
+  usage?: string | null;
+  lastChange?: string | null;
+}
+
 export interface DispensationData {
   taxi: boolean | null;
   dispensations: string | null;
@@ -711,6 +727,8 @@ export interface OpretKTData {
 }
 
 export interface VehicleData {
+  vehicle?: VehicleBasicData | null;
+  registration?: RegistrationData | null;
   visKT?: VisKTData | null;
   opretKT?: OpretKTData | null;
   insurance?: InsuranceData | null;
