@@ -1,20 +1,28 @@
 
 import { NextResponse } from 'next/server';
-import { DMR } from 'dmr';
+import { DMR } from '@/lib/dmr';
 
 async function getVehicleInfo(regNr: string) {
   console.log(`[API_ROUTE] Starting vehicle info fetch for: ${regNr}`);
   try {
     const data = await DMR.vehicle(regNr);
 
-    if (!data || !data.Make || !data.Model || !data.FirstRegistration) {
+    // The DMR library camelCases the keys, so "1. registrering" becomes "1Registrering"
+    // and "Mærke" becomes "maerke". We need to find the correct keys.
+    const makeKey = Object.keys(data).find(k => k.toLowerCase() === 'maerke' || k.toLowerCase() === 'make');
+    const modelKey = Object.keys(data).find(k => k.toLowerCase() === 'model');
+    const registrationKey = Object.keys(data).find(k => k.toLowerCase().includes('registrering'));
+
+    const make = makeKey ? data[makeKey] : null;
+    const model = modelKey ? data[modelKey] : null;
+    const firstRegistrationDate = registrationKey ? data[registrationKey] : null;
+
+    if (!make || !model || !firstRegistrationDate) {
        console.error("[API_ROUTE] Incomplete data from DMR library for:", regNr, data);
        return { error: "The vehicle registry didn't provide all required details. Please check the registration number." };
     }
 
-    const make = data.Make;
-    const model = data.Model;
-    const year = new Date(data.FirstRegistration).getFullYear().toString();
+    const year = new Date(firstRegistrationDate).getFullYear().toString();
 
     console.log(`[API_ROUTE] Final extracted data - Make: ${make}, Model: ${model}, Year: ${year}`);
 
