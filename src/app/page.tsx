@@ -9,8 +9,8 @@ export default function Home() {
           <div className="inline-flex items-center justify-center bg-primary/10 p-3 rounded-full mb-4">
             <Car className="h-10 w-10 text-primary" />
           </div>
-          <h1 className="text-4xl sm:text-5xl font-bold font-auto text-foreground">
-            Auto Aura
+          <h1 className="text-4xl sm:text-5xl font-bold font-headline text-foreground">
+            AUTO AURA
           </h1>
           <p className="text-lg text-muted-foreground mt-3 max-w-xl mx-auto">
             Get a competitive, no-obligation offer for your car in just a few simple steps.
