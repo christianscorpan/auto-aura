@@ -234,7 +234,7 @@ export function CarSaleForm() {
                   <FormItem>
                     <FormLabel>Danish Registration Number</FormLabel>
                     <div className="flex gap-2">
-                      <div className="inline-flex items-center h-14 max-w-xs rounded-md border-2 border-primary bg-white overflow-hidden">
+                      <div className="inline-flex items-center h-14 max-w-xs rounded-md border-2 border-primary bg-input overflow-hidden">
                         <div className="flex items-center justify-center h-full w-10 bg-blue-900 border-r-2 border-gray-300">
                           <Image src="/EU-section-with-DK.svg" alt="DK" width={28} height={40} className="object-contain" />
                         </div>
@@ -244,7 +244,7 @@ export function CarSaleForm() {
                           maxLength={7}
                           autoComplete="off"
                           inputMode="text"
-                          className="h-full flex-1 min-w-0 rounded-none border-0 bg-transparent px-3 text-2xl md:text-3xl font-bold uppercase tracking-widest text-gray-700 focus-visible:ring-0 focus-visible:ring-offset-0"
+                          className="h-full flex-1 min-w-0 rounded-none border-0 bg-transparent px-3 text-2xl md:text-3xl font-bold uppercase tracking-widest text-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
                           value={field.value?.toUpperCase?.() || field.value}
                           onChange={(e) => {
                             const v = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "");
