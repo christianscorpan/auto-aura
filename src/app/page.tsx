@@ -17,7 +17,7 @@ export default function Home() {
                 src="/mercedes-amg.png"
                 alt="Mercedes AMG"
                 fill
-                className="object-cover opacity-50 [filter:drop-shadow(0_0_10px_rgba(255,255,255,0.2))] scale-125 translate-x-[10rem] md:scale-150 md:translate-x-[20rem] md:translate-y-20"
+                className="object-cover opacity-50 [filter:drop-shadow(0_0_10px_rgba(255,255,255,0.2))] scale-110 translate-y-20 md:scale-125 md:translate-x-[15rem]"
                 priority
                 data-ai-hint="luxury car"
             />
