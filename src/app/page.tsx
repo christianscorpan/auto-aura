@@ -10,7 +10,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 
 export default function Home() {
   return (
-    <div className="flex flex-col bg-background h-screen">
+    <div className="flex flex-col bg-background">
       <main className="flex-grow scroll-snap-container">
         <section className="scroll-snap-section w-full h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-900 to-blue-900 text-white">
           <div className="container px-4 md:px-6 text-center">
@@ -33,7 +33,7 @@ export default function Home() {
         </section>
 
         <section id="cars" className="scroll-snap-section w-full h-screen flex flex-col justify-center">
-            <div className="container px-4 md:px-6 flex-grow flex flex-col justify-center">
+            <div className="container px-4 md:px-6 flex flex-col justify-center">
                  <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-center mb-12">
                     Our Collection
                 </h2>
@@ -79,9 +79,9 @@ export default function Home() {
                     <CarouselNext className="hidden sm:flex" />
                 </Carousel>
             </div>
+          <Footer />
         </section>
       </main>
-      <Footer />
     </div>
   );
 }
