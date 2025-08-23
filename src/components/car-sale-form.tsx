@@ -81,6 +81,7 @@ export function CarSaleForm() {
 
   const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
+    mode: "onTouched",
     defaultValues: {
       regNr: "", make: "", model: "", year: "", mileage: "", condition: "", price: "", name: "", email: "", phone: "",
     },
@@ -356,5 +357,4 @@ export function CarSaleForm() {
   );
 }
 
-    
     
