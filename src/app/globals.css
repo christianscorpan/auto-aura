@@ -68,8 +68,8 @@ body {
     --accent: 217.2 32.6% 17.5%;
     --accent-foreground: 210 40% 98%;
     
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 350.2 80.6% 45.9%;
+    --destructive-foreground: 0 0% 100%;
 
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
@@ -91,6 +91,14 @@ body {
 
 
 @layer utilities {
+  .scroll-snap-container {
+    scroll-snap-type: y mandatory;
+    overflow-y: scroll;
+    height: 100vh;
+  }
+  .scroll-snap-section {
+    scroll-snap-align: start;
+  }
   @keyframes fade-in-down {
     from {
       opacity: 0;
