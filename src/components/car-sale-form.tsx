@@ -293,7 +293,7 @@ export function CarSaleForm() {
                 <div>
                     <FormLabel>Upload Car Photos</FormLabel>
                     <FormControl>
-                        <Input id="photo-upload" type="file" multiple accept="image/*" onChange={handlePhotoChange} className="mt-2 block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary/10 file:text-primary hover:file:bg-primary/20" />
+                        <Input id="photo-upload" type="file" multiple accept="image/*" onChange={handlePhotoChange} className="mt-2 file-input" />
                     </FormControl>
                     <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                         {photoPreviews.map((src, index) => (
