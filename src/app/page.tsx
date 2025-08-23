@@ -15,8 +15,8 @@ export default function Home() {
         <div className="container relative px-4 md:px-6 text-center">
             <div className="absolute inset-0 flex items-center justify-center">
                  <Image
-                    src="/hero-car.png"
-                    alt="Luxury car"
+                    src="/mercedes-amg.png"
+                    alt="Mercedes AMG"
                     width={1200}
                     height={800}
                     className="object-contain opacity-40 animate-fade-in-up"
