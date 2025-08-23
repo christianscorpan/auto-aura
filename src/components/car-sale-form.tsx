@@ -1,5 +1,4 @@
 
-
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,6 +17,7 @@ import {
   PartyPopper,
   Search,
   ArrowRight,
+  Gem,
 } from "lucide-react";
 import React from "react";
 import { Button } from "@/components/ui/button";
@@ -56,7 +56,7 @@ const formSchema = z.object({
   year: z.string().refine((val) => !isNaN(parseInt(val, 10)) && parseInt(val, 10) > 1900 && parseInt(val, 10) <= new Date().getFullYear() + 1, { message: "Please enter a valid year." }),
   mileage: z.string().refine((val) => !isNaN(parseInt(val, 10)) && parseInt(val, 10) >= 0, { message: "Please enter a valid mileage." }),
   condition: z.string().min(1, { message: "Please select the car's condition." }),
-  price: z.string().refine((val) => !isNaN(parseInt(val, 10)) && parseInt(val, 10) > 0, { message: "Please enter a valid asking price." }),
+  price: z.string().optional(), // Price is no longer relevant for trade-in
   name: z.string().min(2, { message: "Your name is required." }),
   email: z.string().email({ message: "Please enter a valid email address." }),
   phone: z.string().min(8, { message: "Please enter a valid phone number." }),
@@ -66,14 +66,14 @@ const formSchema = z.object({
 type FormSchemaType = z.infer<typeof formSchema>;
 
 const steps = [
-  { id: 1, name: "Registration Number", icon: ScanLine, fields: ["regNr"] },
-  { id: 2, name: "Vehicle Details", icon: Wrench, fields: ["mileage", "condition", "price"] },
-  { id: 3, name: "Upload Photos", icon: Camera },
+  { id: 1, name: "Trade-in Registration", icon: ScanLine, fields: ["regNr"] },
+  { id: 2, name: "Trade-in Details", icon: Wrench, fields: ["mileage", "condition"] },
+  { id: 3, name: "Upload Photos of Trade-in", icon: Camera },
   { id: 4, name: "Contact Info", icon: User, fields: ["name", "email", "phone"] },
   { id: 5, name: "Review & Submit", icon: FileCheck2 },
 ];
 
-export function CarSaleForm() {
+export function CarSaleForm({ carName }: { carName: string }) {
   const [step, setStep] = React.useState(1);
   const [isPending, startTransition] = React.useTransition();
   const [isFetching, setIsFetching] = React.useState(false);
@@ -98,6 +98,7 @@ export function CarSaleForm() {
       photos.forEach((photo) => {
         formData.append("photos", photo);
       });
+      formData.append("leasedCar", carName); // Add the leased car name
 
       const result = await submitOffer(formData);
       if (result?.error) {
@@ -109,7 +110,7 @@ export function CarSaleForm() {
       }
     });
   };
-
+  
   const handleFetchVehicleInfo = async () => {
     const isValid = await form.trigger("regNr");
     if (!isValid) return;
@@ -131,7 +132,7 @@ export function CarSaleForm() {
         form.setValue("year", year, { shouldValidate: true });
         
         setStep(s => s + 1);
-        toast({ title: "Vehicle Found!", description: "We've pre-filled some details for you." });
+        toast({ title: "Trade-in Found!", description: "We've pre-filled some details for your trade-in." });
       }
     } catch (error: any) {
       console.error("[FORM ERROR] Failed to call vehicle action:", error);
@@ -144,6 +145,7 @@ export function CarSaleForm() {
       setIsFetching(false);
     }
   };
+
 
   const handleNext = async () => {
     const fields = steps[step - 1].fields as (keyof FormSchemaType)[] | undefined;
@@ -165,7 +167,6 @@ export function CarSaleForm() {
       const newPreviews = newFiles.map(file => URL.createObjectURL(file));
       const allPreviews = [...photoPreviews, ...newPreviews].slice(0, 10);
       
-      // Revoke old URLs that are no longer in use
       photoPreviews.forEach(url => {
         if (!allPreviews.includes(url)) {
           URL.revokeObjectURL(url);
@@ -199,9 +200,9 @@ export function CarSaleForm() {
         <Card className="bg-card shadow-2xl border-0">
             <CardContent className="p-8 text-center flex flex-col items-center gap-4">
                 <PartyPopper className="w-16 h-16 text-primary" />
-                <h2 className="text-2xl font-bold">Offer Submitted!</h2>
-                <p className="text-muted-foreground">Thank you for your submission. We've received your offer and will contact you shortly.</p>
-                <Button onClick={resetForm} variant="outline" className="mt-4">Submit Another Car</Button>
+                <h2 className="text-2xl font-bold">Lease Request Submitted!</h2>
+                <p className="text-muted-foreground">Thank you! We've received your request for the {carName} and your trade-in details. We will contact you shortly.</p>
+                <Button onClick={() => window.location.href = '/'} variant="outline" className="mt-4">Explore Other Cars</Button>
             </CardContent>
         </Card>
     )
@@ -217,7 +218,7 @@ export function CarSaleForm() {
             </div>
         </div>
          <CardDescription className="pt-2">
-           Please fill out the details for your vehicle.
+           Complete the following steps to lease the {carName} and trade in your old car.
         </CardDescription>
       </CardHeader>
       <Form {...form}>
@@ -229,7 +230,7 @@ export function CarSaleForm() {
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Danish Registration Number</FormLabel>
+                    <FormLabel>Danish Registration Number (Trade-in)</FormLabel>
                     <div className="flex gap-2">
                       <div className="inline-flex items-center h-14 w-64 rounded-md border-2 border-primary bg-input overflow-hidden">
                         <div className="flex items-center justify-center h-full w-10 bg-blue-900 border-r-2 border-border">
@@ -242,7 +243,8 @@ export function CarSaleForm() {
                           autoComplete="off"
                           inputMode="text"
                           className="h-full flex-1 min-w-0 rounded-none border-0 bg-transparent px-3 text-2xl md:text-3xl font-bold uppercase tracking-widest text-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
-                          value={field.value?.toUpperCase?.() || field.value}
+                          {...field}
+                          value={field.value?.toUpperCase?.() || ''}
                           onChange={(e) => {
                             const v = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "");
                             field.onChange(v);
@@ -284,10 +286,9 @@ export function CarSaleForm() {
                         <p className="font-semibold text-lg">{form.getValues("year") || 'N/A'}</p>
                     </div>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField name="mileage" control={form.control} render={({ field }) => ( <FormItem><FormLabel>Mileage (km)</FormLabel><FormControl><Input type="number" placeholder="e.g. 50000" {...field} /></FormControl></FormItem> )} />
                 <FormField name="condition" control={form.control} render={({ field }) => ( <FormItem><FormLabel>Condition</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select condition" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Excellent">Excellent</SelectItem><SelectItem value="Good">Good</SelectItem><SelectItem value="Fair">Fair</SelectItem><SelectItem value="Poor">Poor</SelectItem></SelectContent></Select></FormItem> )} />
-                <FormField name="price" control={form.control} render={({ field }) => ( <FormItem><FormLabel>Asking Price (DKK)</FormLabel><FormControl><Input type="number" placeholder="e.g. 250000" {...field} /></FormControl></FormItem> )} />
               </div>
                 <FormField name="commentary" control={form.control} render={({ field }) => ( <FormItem><FormLabel>Extra Commentary</FormLabel><FormControl><Textarea placeholder="e.g. Special features, service history, known issues..." {...field} /></FormControl></FormItem> )} />
               </div>
@@ -295,14 +296,14 @@ export function CarSaleForm() {
             
             {step === 3 && (
                 <div>
-                    <FormLabel>Upload Car Photos</FormLabel>
+                    <FormLabel>Upload Photos of Your Trade-in</FormLabel>
                     <FormControl>
                         <Input id="photo-upload" type="file" multiple accept="image/*" onChange={handlePhotoChange} className="mt-2 file-input" />
                     </FormControl>
                     <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                         {photoPreviews.map((src, index) => (
                             <div key={index} className="relative group aspect-square">
-                                <Image src={src} alt={`Car photo preview ${index + 1}`} fill objectFit="cover" className="rounded-md" data-ai-hint="car detail" />
+                                <Image src={src} alt={`Trade-in photo preview ${index + 1}`} fill objectFit="cover" className="rounded-md" data-ai-hint="car detail" />
                                 <Button type="button" size="icon" variant="destructive" className="absolute top-1 right-1 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity" onClick={() => removePhoto(index)}><Trash2 className="h-4 w-4" /></Button>
                             </div>
                         ))}
@@ -320,7 +321,12 @@ export function CarSaleForm() {
 
             {step === 5 && (
               <div className="space-y-6">
-                <h3 className="text-lg font-semibold">Please review your offer</h3>
+                <h3 className="text-lg font-semibold">Please review your lease request</h3>
+                 <div className="p-4 bg-secondary rounded-lg">
+                    <strong className="text-muted-foreground">Leasing:</strong>
+                    <p className="text-lg font-semibold">{carName}</p>
+                </div>
+                <h4 className="text-md font-semibold">Trade-in Vehicle Details:</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm p-4 bg-secondary rounded-lg">
                     <div><strong className="text-muted-foreground">Reg. Nr.:</strong> {form.getValues("regNr")}</div>
                     <div><strong className="text-muted-foreground">Make:</strong> {form.getValues("make")}</div>
@@ -328,10 +334,6 @@ export function CarSaleForm() {
                     <div><strong className="text-muted-foreground">Year:</strong> {form.getValues("year")}</div>
                     <div><strong className="text-muted-foreground">Mileage:</strong> {form.getValues("mileage")} km</div>
                     <div><strong className="text-muted-foreground">Condition:</strong> {form.getValues("condition")}</div>
-                    <div><strong className="text-muted-foreground">Price:</strong> DKK {form.getValues("price")}</div>
-                    <div><strong className="text-muted-foreground">Name:</strong> {form.getValues("name")}</div>
-                    <div><strong className="text-muted-foreground">Email:</strong> {form.getValues("email")}</div>
-                    <div><strong className="text-muted-foreground">Phone:</strong> {form.getValues("phone")}</div>
                 </div>
                  {form.getValues("commentary") && (
                     <div className="p-4 bg-secondary rounded-lg">
@@ -340,6 +342,13 @@ export function CarSaleForm() {
                     </div>
                  )}
                 {photos.length > 0 && <div className="p-4 bg-secondary rounded-lg"><strong className="text-muted-foreground">Photos:</strong> {photos.length} uploaded</div>}
+
+                <h4 className="text-md font-semibold">Your Contact Information:</h4>
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm p-4 bg-secondary rounded-lg">
+                    <div><strong className="text-muted-foreground">Name:</strong> {form.getValues("name")}</div>
+                    <div><strong className="text-muted-foreground">Email:</strong> {form.getValues("email")}</div>
+                    <div><strong className="text-muted-foreground">Phone:</strong> {form.getValues("phone")}</div>
+                 </div>
               </div>
             )}
           </CardContent>
@@ -353,7 +362,7 @@ export function CarSaleForm() {
                  {step > 1 && step < 5 && ( <Button type="button" onClick={handleNext}> 
                     Next <ArrowRight className="ml-2 h-4 w-4" />
                  </Button> )}
-                {step === 5 && ( <Button type="submit" disabled={isPending} className="w-full md:w-auto"> {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} Submit Offer </Button> )}
+                {step === 5 && ( <Button type="submit" disabled={isPending} className="w-full md:w-auto"> {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} Submit Request </Button> )}
             </div>
           </CardFooter>
         </form>

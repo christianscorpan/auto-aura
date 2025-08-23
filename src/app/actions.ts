@@ -11,11 +11,12 @@ const formSchema = z.object({
   year: z.string().min(4, "A valid year is required."),
   mileage: z.string().min(1, "Mileage is required."),
   condition: z.string().min(1, "Condition is required."),
-  price: z.string().min(1, "Asking price is required."),
+  price: z.string().optional(),
   name: z.string().min(2, "Your name is required."),
   email: z.string().email("A valid email is required."),
   phone: z.string().min(8, "A valid phone number is required."),
   commentary: z.string().optional(),
+  leasedCar: z.string(),
 });
 
 export async function getVehicleInfo(regNr: string) {
@@ -27,12 +28,10 @@ export async function getVehicleInfo(regNr: string) {
       return { error: `No vehicle found with registration number: ${regNr}.` };
     }
 
-    // Prefer normalized fields introduced in the updated library
     const brandVal = data.vehicle?.brand ?? null;
     const modelVal = data.vehicle?.model ?? null;
     const firstReg = data.registration?.firstRegistrationDate ?? null;
 
-    // Fallbacks from visKT if needed
     const makeVal = data.visKT?.lblFabrikant?.value ?? null;
     const modelAarVal = data.visKT?.lblModelAar?.value as unknown;
     const regDatoVal = data.visKT?.lblRegDato?.value as unknown;
@@ -45,7 +44,7 @@ export async function getVehicleInfo(regNr: string) {
       year = String(firstReg.getFullYear());
     } else if (typeof modelAarVal === 'number') {
       year = String(modelAarVal);
-    } else if (typeof modelAarVal === 'string' && /^\d{4}$/.test(modelAarVal)) {
+    } else if (typeof modelAarVal === 'string' && /^\\d{4}$/.test(modelAarVal)) {
       year = modelAarVal;
     } else if (regDatoVal instanceof Date) {
       year = String(regDatoVal.getFullYear());
@@ -54,7 +53,6 @@ export async function getVehicleInfo(regNr: string) {
       if (!isNaN(d.getTime())) year = String(d.getFullYear());
     }
 
-    // Allow partial prefill: at minimum try to provide the year.
     if (!year) {
       console.warn('[SERVER_ACTION] Year could not be derived from DMR data, returning empty prefill.');
     }
@@ -94,8 +92,19 @@ export async function submitOffer(formData: FormData) {
   const { data } = validatedFields;
   const files = formData.getAll("photos");
   
-  console.log("--- New Car Offer Received ---");
-  console.log("Offer Details:", data);
+  console.log("--- New Lease & Trade-in Request ---");
+  console.log("Leasing car:", data.leasedCar);
+  console.log("Contact Info:", { name: data.name, email: data.email, phone: data.phone });
+  console.log("Trade-in Details:", { 
+      regNr: data.regNr,
+      make: data.make,
+      model: data.model,
+      year: data.year,
+      mileage: data.mileage,
+      condition: data.condition,
+      commentary: data.commentary 
+  });
+
 
   const photoDetails = files.map(file => {
       if(file instanceof File) {
@@ -104,10 +113,10 @@ export async function submitOffer(formData: FormData) {
       return 'Invalid file entry';
   }).join(', ');
 
-  console.log("Photos:", photoDetails || "No photos uploaded");
+  console.log("Trade-in Photos:", photoDetails || "No photos uploaded");
   console.log("----------------------------");
 
   await new Promise((resolve) => setTimeout(resolve, 2000));
 
-  return { success: "Offer submitted successfully! We will get back to you shortly." };
+  return { success: `Your request for the ${data.leasedCar} has been submitted! We will get back to you shortly.` };
 }

@@ -4,8 +4,8 @@ import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
-  title: 'Auto Aura',
-  description: 'Sell your car with ease.',
+  title: 'Auto Aura - Lease Your Dream Car',
+  description: 'Lease your dream car and trade in your old one with ease.',
 };
 
 export default function RootLayout({
