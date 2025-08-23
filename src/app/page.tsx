@@ -1,5 +1,6 @@
+
 import { CarSaleForm } from '@/components/car-sale-form';
-import { Car } from 'lucide-react';
+import { Gem } from 'lucide-react';
 
 export default function Home() {
   return (
@@ -7,7 +8,7 @@ export default function Home() {
       <div className="w-full max-w-3xl">
         <div className="text-center mb-10">
           <div className="inline-flex items-center justify-center bg-primary/10 p-3 rounded-full mb-4">
-            <Car className="h-10 w-10 text-primary" />
+            <Gem className="h-10 w-10 text-primary" />
           </div>
           <h1 className="text-4xl sm:text-5xl font-bold font-headline text-foreground">
             AUTO AURA
