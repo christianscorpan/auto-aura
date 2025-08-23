@@ -232,7 +232,7 @@ export function CarSaleForm() {
                     <FormLabel>Danish Registration Number</FormLabel>
                     <div className="flex gap-2">
                       <div className="inline-flex items-center h-14 max-w-xs rounded-md border-2 border-primary bg-input overflow-hidden">
-                        <div className="flex items-center justify-center h-full w-10 bg-blue-900 border-r-2 border-gray-300">
+                        <div className="flex items-center justify-center h-full w-10 bg-blue-900 border-r-2 border-border">
                           <Image src="/EU-section-with-DK.svg" alt="DK" width={28} height={40} className="object-contain" />
                         </div>
                         <Input
@@ -355,3 +355,5 @@ export function CarSaleForm() {
     </Card>
   );
 }
+
+    
