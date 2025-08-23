@@ -26,7 +26,6 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
@@ -261,7 +260,6 @@ export function CarSaleForm() {
                         )}
                       </Button>
                     </div>
-                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -284,9 +282,9 @@ export function CarSaleForm() {
                     </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <FormField name="mileage" control={form.control} render={({ field }) => ( <FormItem><FormLabel>Mileage (km)</FormLabel><FormControl><Input type="number" placeholder="e.g. 50000" {...field} /></FormControl><FormMessage /></FormItem> )} />
-                <FormField name="condition" control={form.control} render={({ field }) => ( <FormItem><FormLabel>Condition</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select condition" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Excellent">Excellent</SelectItem><SelectItem value="Good">Good</SelectItem><SelectItem value="Fair">Fair</SelectItem><SelectItem value="Poor">Poor</SelectItem></SelectContent></Select><FormMessage /></FormItem> )} />
-                <FormField name="price" control={form.control} render={({ field }) => ( <FormItem><FormLabel>Asking Price (DKK)</FormLabel><FormControl><Input type="number" placeholder="e.g. 250000" {...field} /></FormControl><FormMessage /></FormItem> )} />
+                <FormField name="mileage" control={form.control} render={({ field }) => ( <FormItem><FormLabel>Mileage (km)</FormLabel><FormControl><Input type="number" placeholder="e.g. 50000" {...field} /></FormControl></FormItem> )} />
+                <FormField name="condition" control={form.control} render={({ field }) => ( <FormItem><FormLabel>Condition</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select condition" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Excellent">Excellent</SelectItem><SelectItem value="Good">Good</SelectItem><SelectItem value="Fair">Fair</SelectItem><SelectItem value="Poor">Poor</SelectItem></SelectContent></Select></FormItem> )} />
+                <FormField name="price" control={form.control} render={({ field }) => ( <FormItem><FormLabel>Asking Price (DKK)</FormLabel><FormControl><Input type="number" placeholder="e.g. 250000" {...field} /></FormControl></FormItem> )} />
               </div>
               </div>
             )}
@@ -310,9 +308,9 @@ export function CarSaleForm() {
 
             {step === 4 && (
               <div className="space-y-4">
-                <FormField name="name" control={form.control} render={({ field }) => ( <FormItem><FormLabel>Full Name</FormLabel><FormControl><Input placeholder="John Doe" {...field} /></FormControl><FormMessage /></FormItem> )} />
-                <FormField name="email" control={form.control} render={({ field }) => ( <FormItem><FormLabel>Email Address</FormLabel><FormControl><Input type="email" placeholder="john.doe@example.com" {...field} /></FormControl><FormMessage /></FormItem> )} />
-                <FormField name="phone" control={form.control} render={({ field }) => ( <FormItem><FormLabel>Phone Number</FormLabel><FormControl><Input type="tel" placeholder="+45 12 34 56 78" {...field} /></FormControl><FormMessage /></FormItem> )} />
+                <FormField name="name" control={form.control} render={({ field }) => ( <FormItem><FormLabel>Full Name</FormLabel><FormControl><Input placeholder="John Doe" {...field} /></FormControl></FormItem> )} />
+                <FormField name="email" control={form.control} render={({ field }) => ( <FormItem><FormLabel>Email Address</FormLabel><FormControl><Input type="email" placeholder="john.doe@example.com" {...field} /></FormControl></FormItem> )} />
+                <FormField name="phone" control={form.control} render={({ field }) => ( <FormItem><FormLabel>Phone Number</FormLabel><FormControl><Input type="tel" placeholder="+45 12 34 56 78" {...field} /></FormControl></FormItem> )} />
               </div>
             )}
 
@@ -353,5 +351,3 @@ export function CarSaleForm() {
     </Card>
   );
 }
-
-    
