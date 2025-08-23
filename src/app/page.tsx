@@ -11,7 +11,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 export default function Home() {
   return (
     <main className="flex-grow scroll-snap-container bg-background">
-      <section className="scroll-snap-section w-full h-screen flex items-start justify-center pt-24 bg-gradient-to-br from-black via-gray-900 to-black text-white overflow-hidden">
+      <section className="scroll-snap-section w-full h-screen flex items-start justify-center bg-gradient-to-br from-black via-gray-900 to-black text-white overflow-hidden">
         <div className="container relative px-4 md:px-6 text-center">
             <div className="absolute inset-0 pt-20">
                  <Image
@@ -24,7 +24,7 @@ export default function Home() {
                     data-ai-hint="luxury car"
                 />
             </div>
-           <div className="relative z-10">
+           <div className="relative z-10 pt-24">
               <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold font-headline tracking-tighter mb-4 animate-fade-in-down">
                 AUTO AURA
               </h1>
@@ -35,7 +35,7 @@ export default function Home() {
                 Get your dream car leased and get rid of your old car. Explore our exclusive collection of luxury vehicles.
               </p>
               <Link href="#cars">
-                  <Button size="lg" className="animate-fade-in-up animation-delay-300">
+                  <Button variant="outline" size="lg" className="animate-fade-in-up animation-delay-300 bg-transparent text-white border-white/50 hover:bg-white/10 hover:text-white">
                       Explore Showroom
                       <ArrowDown className="ml-2 h-5 w-5" />
                   </Button>
