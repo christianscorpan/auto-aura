@@ -11,23 +11,36 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 export default function Home() {
   return (
     <main className="flex-grow scroll-snap-container bg-background">
-      <section className="scroll-snap-section w-full h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-900 to-blue-900 text-white">
-        <div className="container px-4 md:px-6 text-center">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold font-headline tracking-tighter mb-4 animate-fade-in-down">
-            AUTO AURA
-          </h1>
-          <p className="text-xl md:text-2xl text-blue-300/80 max-w-3xl mx-auto mb-2 animate-fade-in-up animation-delay-300">
-            Lease Your Dream Car
-          </p>
-          <p className="text-lg text-gray-300 max-w-3xl mx-auto mb-8 animate-fade-in-up animation-delay-300">
-            Get your dream car leased and get rid of your old car. Explore our exclusive collection of luxury vehicles.
-          </p>
-          <Link href="#cars">
-              <Button size="lg" className="animate-fade-in-up animation-delay-300">
-                  Explore Showroom
-                  <ArrowDown className="ml-2 h-5 w-5" />
-              </Button>
-          </Link>
+      <section className="scroll-snap-section w-full h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-900 to-blue-900 text-white overflow-hidden">
+        <div className="container relative px-4 md:px-6 text-center">
+            <div className="absolute inset-0 flex items-center justify-center">
+                 <Image
+                    src="/hero-car.png"
+                    alt="Luxury car"
+                    width={1200}
+                    height={800}
+                    className="object-contain opacity-40 animate-fade-in-up"
+                    priority
+                    data-ai-hint="luxury car"
+                />
+            </div>
+           <div className="relative z-10">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold font-headline tracking-tighter mb-4 animate-fade-in-down">
+                AUTO AURA
+              </h1>
+              <p className="text-xl md:text-2xl text-blue-300/80 max-w-3xl mx-auto mb-2 animate-fade-in-up animation-delay-300">
+                Lease Your Dream Car
+              </p>
+              <p className="text-lg text-gray-300 max-w-3xl mx-auto mb-8 animate-fade-in-up animation-delay-300">
+                Get your dream car leased and get rid of your old car. Explore our exclusive collection of luxury vehicles.
+              </p>
+              <Link href="#cars">
+                  <Button size="lg" className="animate-fade-in-up animation-delay-300">
+                      Explore Showroom
+                      <ArrowDown className="ml-2 h-5 w-5" />
+                  </Button>
+              </Link>
+            </div>
         </div>
       </section>
 
