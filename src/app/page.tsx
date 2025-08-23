@@ -31,8 +31,8 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="cars" className="scroll-snap-section w-full h-screen flex flex-col justify-center">
-          <div className="container px-4 md:px-6 flex flex-col justify-center flex-grow">
+      <section id="cars" className="scroll-snap-section w-full h-screen flex flex-col justify-start">
+          <div className="container px-4 md:px-6 flex flex-col justify-center flex-grow pt-24">
                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-center mb-12">
                   Our Collection
               </h2>
