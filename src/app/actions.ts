@@ -15,6 +15,7 @@ const formSchema = z.object({
   name: z.string().min(2, "Your name is required."),
   email: z.string().email("A valid email is required."),
   phone: z.string().min(8, "A valid phone number is required."),
+  commentary: z.string().optional(),
 });
 
 export async function getVehicleInfo(regNr: string) {

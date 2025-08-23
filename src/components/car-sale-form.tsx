@@ -46,6 +46,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { submitOffer, getVehicleInfo } from "@/app/actions";
 import Image from "next/image";
+import { Textarea } from "./ui/textarea";
 
 const formSchema = z.object({
   regNr: z.string().min(2, { message: "Danish reg. nr. is required." }).max(7),
@@ -58,6 +59,7 @@ const formSchema = z.object({
   name: z.string().min(2, { message: "Your name is required." }),
   email: z.string().email({ message: "Please enter a valid email address." }),
   phone: z.string().min(8, { message: "Please enter a valid phone number." }),
+  commentary: z.string().optional(),
 });
 
 type FormSchemaType = z.infer<typeof formSchema>;
@@ -82,7 +84,7 @@ export function CarSaleForm() {
     resolver: zodResolver(formSchema),
     mode: "onTouched",
     defaultValues: {
-      regNr: "", make: "", model: "", year: "", mileage: "", condition: "", price: "", name: "", email: "", phone: "",
+      regNr: "", make: "", model: "", year: "", mileage: "", condition: "", price: "", name: "", email: "", phone: "", commentary: "",
     },
   });
 
@@ -286,6 +288,7 @@ export function CarSaleForm() {
                 <FormField name="condition" control={form.control} render={({ field }) => ( <FormItem><FormLabel>Condition</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select condition" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Excellent">Excellent</SelectItem><SelectItem value="Good">Good</SelectItem><SelectItem value="Fair">Fair</SelectItem><SelectItem value="Poor">Poor</SelectItem></SelectContent></Select></FormItem> )} />
                 <FormField name="price" control={form.control} render={({ field }) => ( <FormItem><FormLabel>Asking Price (DKK)</FormLabel><FormControl><Input type="number" placeholder="e.g. 250000" {...field} /></FormControl></FormItem> )} />
               </div>
+                <FormField name="commentary" control={form.control} render={({ field }) => ( <FormItem><FormLabel>Extra Commentary</FormLabel><FormControl><Textarea placeholder="e.g. Special features, service history, known issues..." {...field} /></FormControl></FormItem> )} />
               </div>
             )}
             
@@ -329,6 +332,12 @@ export function CarSaleForm() {
                     <div><strong className="text-muted-foreground">Email:</strong> {form.getValues("email")}</div>
                     <div><strong className="text-muted-foreground">Phone:</strong> {form.getValues("phone")}</div>
                 </div>
+                 {form.getValues("commentary") && (
+                    <div className="p-4 bg-secondary rounded-lg">
+                        <strong className="text-muted-foreground">Commentary:</strong>
+                        <p className="text-sm whitespace-pre-wrap">{form.getValues("commentary")}</p>
+                    </div>
+                 )}
                 {photos.length > 0 && <div className="p-4 bg-secondary rounded-lg"><strong className="text-muted-foreground">Photos:</strong> {photos.length} uploaded</div>}
               </div>
             )}
@@ -351,3 +360,4 @@ export function CarSaleForm() {
     </Card>
   );
 }
+
