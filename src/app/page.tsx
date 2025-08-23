@@ -18,7 +18,7 @@ export default function Home() {
                 alt="Mercedes AMG"
                 width={1000}
                 height={673}
-                className="object-contain opacity-50 [filter:drop-shadow(0_0_10px_rgba(255,255,255,0.2))] translate-x-[5rem] translate-y-20"
+                className="object-contain opacity-50 [filter:drop-shadow(0_0_10px_rgba(255,255,255,0.2))] md:translate-x-[5rem] md:translate-y-20"
                 priority
                 data-ai-hint="luxury car"
             />
