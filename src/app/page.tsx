@@ -19,7 +19,7 @@ export default function Home() {
                     alt="Mercedes AMG"
                     width={1200}
                     height={800}
-                    className="object-contain opacity-40 animate-fade-in-up"
+                    className="object-contain opacity-40 animate-fade-in-up [filter:drop-shadow(0_0_10px_rgba(255,255,255,0.2))]"
                     priority
                     data-ai-hint="luxury car"
                 />
