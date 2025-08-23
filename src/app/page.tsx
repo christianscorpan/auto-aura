@@ -16,9 +16,9 @@ export default function Home() {
              <Image
                 src="/mercedes-amg.png"
                 alt="Mercedes AMG"
-                width={1500}
-                height={1009}
-                className="object-contain opacity-50 [filter:drop-shadow(0_0_10px_rgba(255,255,255,0.2))] translate-x-[10rem] md:translate-y-20"
+                width={1800}
+                height={1211}
+                className="object-contain opacity-50 [filter:drop-shadow(0_0_10px_rgba(255,255,255,0.2))] translate-x-[15rem] md:translate-y-20"
                 priority
                 data-ai-hint="luxury car"
             />
