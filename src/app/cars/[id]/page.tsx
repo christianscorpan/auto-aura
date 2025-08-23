@@ -1,22 +1,36 @@
 
+'use client';
+
 import { cars } from '@/lib/cars';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle, Gauge, Calendar, Car, Wrench, Palette } from 'lucide-react';
+import { CheckCircle, Gauge, Calendar, Car, Wrench, Palette, ArrowDown, ArrowRight } from 'lucide-react';
 import { LeaseFormSection } from '@/components/lease-form-section';
 import { Footer } from '@/components/landing-page/footer';
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
 
 export default function CarDetailPage({ params }: { params: { id: string } }) {
+  const [showForm, setShowForm] = useState(false);
+  
   const car = cars.find((c) => c.id === params.id);
 
   if (!car) {
     notFound();
   }
 
+  const handleScrollAndShow = () => {
+    setShowForm(true);
+    setTimeout(() => {
+        document.getElementById('trade-in-form')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 100);
+  };
+
+
   return (
     <div className="flex flex-col min-h-screen bg-secondary">
-       <main className="flex-grow">
+       <main className="flex-grow pb-24 md:pb-0">
         <div className="container mx-auto px-4 py-12 md:py-20">
           <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
             
@@ -75,11 +89,26 @@ export default function CarDetailPage({ params }: { params: { id: string } }) {
             <p className="text-muted-foreground leading-relaxed max-w-4xl">{car.longDescription}</p>
           </div>
           
-          <LeaseFormSection carName={car.name} />
+          <LeaseFormSection 
+            carName={car.name} 
+            showForm={showForm} 
+            onShowForm={handleScrollAndShow} 
+          />
 
         </div>
        </main>
       <Footer />
+       {/* Mobile Fixed CTA */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-background/80 backdrop-blur-sm border-t p-4 flex items-center justify-between gap-4">
+        <div>
+          <p className="font-bold text-sm truncate">{car.name}</p>
+          <p className="text-xs text-muted-foreground">Start your lease request</p>
+        </div>
+        <Button onClick={handleScrollAndShow} className="shrink-0">
+          Start Leasing
+          <ArrowRight className="ml-2 h-4 w-4" />
+        </Button>
+      </div>
     </div>
   );
 }
