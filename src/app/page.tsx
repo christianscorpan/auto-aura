@@ -13,7 +13,7 @@ export default function Home() {
     <main className="flex-grow scroll-snap-container bg-background">
       <section className="scroll-snap-section w-full h-screen flex items-start justify-center pt-24 bg-gradient-to-br from-black via-gray-900 to-black text-white overflow-hidden">
         <div className="container relative px-4 md:px-6 text-center">
-            <div className="absolute inset-0 flex items-center justify-center">
+            <div className="absolute inset-0 pt-20">
                  <Image
                     src="/mercedes-amg.png"
                     alt="Mercedes AMG"
