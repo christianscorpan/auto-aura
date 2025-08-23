@@ -14,9 +14,12 @@ export default function Home() {
         <section className="w-full py-20 md:py-32 lg:py-40 bg-gradient-to-br from-gray-900 via-gray-900 to-blue-900 text-white">
           <div className="container px-4 md:px-6 text-center">
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold font-headline tracking-tighter mb-4 animate-fade-in-down">
-              Lease Your Dream Car
+              AUTO AURA
             </h1>
-            <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto mb-8 animate-fade-in-up">
+            <p className="text-xl md:text-2xl text-blue-300/80 max-w-3xl mx-auto mb-2 animate-fade-in-up animation-delay-300">
+              Lease Your Dream Car
+            </p>
+            <p className="text-lg text-gray-300 max-w-3xl mx-auto mb-8 animate-fade-in-up animation-delay-300">
               Get your dream car leased and get rid of your old car. Explore our exclusive collection of luxury vehicles.
             </p>
           </div>
