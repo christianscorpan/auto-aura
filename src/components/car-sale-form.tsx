@@ -109,14 +109,11 @@ export function CarSaleForm() {
   };
 
   const handleFetchVehicleInfo = async () => {
-    console.log("[FORM] 'Find Vehicle' button clicked.");
-    const regNr = form.getValues("regNr");
-    if (!regNr || regNr.length < 2) {
-      form.setError("regNr", { type: "manual", message: "A valid registration number is required." });
-      return;
-    }
+    const isValid = await form.trigger("regNr");
+    if (!isValid) return;
 
     setIsFetching(true);
+    const regNr = form.getValues("regNr");
     try {
       const result = await getVehicleInfo(regNr);
 
