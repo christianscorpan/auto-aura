@@ -1,15 +1,11 @@
 
 import { CarSaleForm } from '@/components/car-sale-form';
-import { Gem } from 'lucide-react';
 
 export default function Home() {
   return (
     <main className="flex min-h-screen w-full flex-col items-center justify-center bg-background p-4 py-12 sm:p-16 md:p-24">
       <div className="w-full max-w-3xl">
         <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center bg-primary/10 p-3 rounded-full mb-4">
-            <Gem className="h-10 w-10 text-primary" />
-          </div>
           <h1 className="text-4xl sm:text-5xl font-bold font-headline text-foreground">
             AUTO AURA
           </h1>
