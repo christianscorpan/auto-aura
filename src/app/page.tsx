@@ -12,13 +12,12 @@ export default function Home() {
   return (
     <main className="flex-grow scroll-snap-container bg-background">
       <section className="scroll-snap-section w-full h-screen flex flex-col justify-between bg-gradient-to-br from-black via-gray-900 to-black text-white overflow-hidden">
-        <div className="absolute inset-0 flex items-center justify-center">
+        <div className="absolute inset-0">
              <Image
                 src="/mercedes-amg.png"
                 alt="Mercedes AMG"
-                width={1800}
-                height={1211}
-                className="object-contain opacity-50 [filter:drop-shadow(0_0_10px_rgba(255,255,255,0.2))] translate-x-[15rem] md:translate-y-20"
+                fill
+                className="object-cover opacity-50 [filter:drop-shadow(0_0_10px_rgba(255,255,255,0.2))] translate-x-1/2 scale-150 md:scale-100 md:translate-x-[15rem] md:translate-y-20"
                 priority
                 data-ai-hint="luxury car"
             />
