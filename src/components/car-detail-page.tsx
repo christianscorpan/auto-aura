@@ -20,6 +20,10 @@ export function CarDetailPageClient({ car }: { car: Car }) {
     }, 100);
   };
 
+  // Prefer local unknown image if the car image is a placeholder
+  const isPlaceholder = !car.image || car.image.includes('placehold.co');
+  const [imgSrc, setImgSrc] = useState<string>(isPlaceholder ? '/unknown-car.png' : car.image);
+
   return (
     <div className="flex flex-col min-h-screen bg-secondary">
        <main className="flex-grow pb-24 md:pb-0">
@@ -28,12 +32,16 @@ export function CarDetailPageClient({ car }: { car: Car }) {
             
             {/* Image Gallery */}
             <div className="relative aspect-video rounded-lg overflow-hidden shadow-2xl">
-              <Image 
-                src={car.image} 
-                alt={`Image of ${car.name}`} 
-                fill 
+              <Image
+                src={imgSrc}
+                alt={`Image of ${car.name}`}
+                fill
                 className="object-cover"
-                data-ai-hint={car.hint} 
+                data-ai-hint={car.hint}
+                onError={() => {
+                  if (imgSrc !== '/unknown-car.png') setImgSrc('/unknown-car.png');
+                }}
+                priority
               />
             </div>
 

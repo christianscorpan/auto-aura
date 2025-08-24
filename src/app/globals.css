@@ -84,6 +84,15 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+  /* Use body as the scroll container so the hero can snap,
+     while the listing remains free-scrolling. */
+  /* Remove scroll snap behavior */
+  html, body {
+    height: auto;
+  }
+  body {
+    overflow-y: auto;
+  }
   .file-input::file-selector-button {
       @apply bg-primary/10 text-primary hover:bg-primary/20 font-semibold mr-4 py-2 px-4 rounded-full border-0;
   }
@@ -91,14 +100,7 @@ body {
 
 
 @layer utilities {
-  .scroll-snap-container {
-    scroll-snap-type: y mandatory;
-    overflow-y: scroll;
-    height: 100vh;
-  }
-  .scroll-snap-section {
-    scroll-snap-align: start;
-  }
+  /* Removed .scroll-snap- utilities */
   @keyframes fade-in-down {
     from {
       opacity: 0;
